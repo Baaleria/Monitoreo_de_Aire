@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Monitoreo_de_Aire</string>
     <string name="textLogin">Bienvenido</string>
-    <string name="inputCorreoUsuario">Correo Electronico / Usuario</string>
+    <string name="inputCorreoUsuario">Correo Electronico</string>
     <string name="placeholderCorreoUsuario">correoelectronico@email.com</string>
     <string name="inputContraseña">Contraseña</string>
     <string name="btnIngresar">Ingresar</string>

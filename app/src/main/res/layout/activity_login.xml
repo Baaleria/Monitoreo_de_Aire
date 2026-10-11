@@ -11,15 +11,15 @@
 
     <!-- Espacio superior -->
     <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="264dp"
+        android:layout_height="20dp"
         android:layout_weight="1" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/textLogin"
-        android:textSize="32sp"
+        android:textSize="36sp"
         android:textStyle="bold"
         android:textColor="#000000" />
 
@@ -32,7 +32,7 @@
 
     <!-- Campo Correo -->
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="327dp"
         android:layout_height="wrap_content"
         android:text="@string/inputCorreoUsuario"
         android:textColor="#2196F3"
@@ -41,17 +41,17 @@
 
     <EditText
         android:id="@+id/correo"
-        android:layout_width="match_parent"
+        android:layout_width="329dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#A9A9A9"
         android:hint="@string/placeholderCorreoUsuario"
         android:inputType="textEmailAddress"
-        android:backgroundTint="#A9A9A9"
-        android:paddingVertical="12dp"
-        android:layout_marginBottom="24dp" />
+        android:paddingVertical="12dp" />
 
     <!-- Campo Contraseña -->
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="323dp"
         android:layout_height="wrap_content"
         android:text="@string/inputContraseña"
         android:textColor="#2196F3"
@@ -60,19 +60,20 @@
 
     <EditText
         android:id="@+id/contrasena"
-        android:layout_width="match_parent"
+        android:layout_width="324dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#A9A9A9"
         android:hint="••••••••"
         android:inputType="textPassword"
-        android:backgroundTint="#A9A9A9"
-        android:paddingVertical="12dp"
-        android:layout_marginBottom="32dp" />
+        android:paddingVertical="12dp" />
 
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:text="@string/btnIngresar"
+        android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:backgroundTint="#2196F3"
         app:cornerRadius="16dp" />
