@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "502887846613",
+    "project_id": "monitorea-de-calidad-de-aire",
+    "storage_bucket": "monitorea-de-calidad-de-aire.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502887846613:android:f555396d02cd288c28c85c",
+        "android_client_info": {
+          "package_name": "com.example.monitoreo_de_aire"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgU7JDVyulaY-drPrGw6ZsjjhTFbnKUtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

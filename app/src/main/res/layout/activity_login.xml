@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:gravity="center_horizontal"
+    android:background="#FFFFFF">
+
+    <!-- Espacio superior -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/textLogin"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#000000" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="#A9A9A9" />
+
+    <!-- Campo Correo -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/inputCorreoUsuario"
+        android:textColor="#2196F3"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/correo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/placeholderCorreoUsuario"
+        android:inputType="textEmailAddress"
+        android:backgroundTint="#A9A9A9"
+        android:paddingVertical="12dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Campo Contraseña -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/inputContraseña"
+        android:textColor="#2196F3"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/contrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="••••••••"
+        android:inputType="textPassword"
+        android:backgroundTint="#A9A9A9"
+        android:paddingVertical="12dp"
+        android:layout_marginBottom="32dp" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="@string/btnIngresar"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2196F3"
+        app:cornerRadius="16dp" />
+
+    <!-- Espacio inferior -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tvCreateAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/btnCrearCuenta"
+        android:textColor="#2196F3"
+        android:textStyle="bold"
+        android:padding="8dp" />
+
+</LinearLayout>
