@@ -1,6 +1,7 @@
 package com.example.monitoreo_de_aire
 
 import android.os.Bundle
+import android.content.Intent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // Si ingresa bien
                         Toast.makeText(this@MainActivity, "✅ ¡Bienvenido!", Toast.LENGTH_SHORT).show()
-
+                        // Redireccionamiendo a la pagina de inicio
                         // val intent = Intent(this, DashboardActivity::class.java)
                         // startActivity(intent)
                         // finish()
@@ -72,8 +73,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         tvCreateAccount.setOnClickListener {
-            // val intent = Intent(this, RegistrarActivity::class.java)
-            // startActivity(intent)
+            val intent = Intent(this, RegistrarActivity::class.java)
+            startActivity(intent)
         }
     }
 }

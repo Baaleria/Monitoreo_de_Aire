@@ -30,13 +30,18 @@
         android:layout_marginBottom="32dp"
         android:background="#A9A9A9" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1" />
+
     <!-- Campo Correo -->
     <TextView
         android:layout_width="327dp"
         android:layout_height="wrap_content"
         android:text="@string/inputCorreoUsuario"
         android:textColor="#2196F3"
-        android:textSize="14sp"
+        android:textSize="17sp"
         android:textStyle="bold" />
 
     <EditText
@@ -55,7 +60,7 @@
         android:layout_height="wrap_content"
         android:text="@string/inputContraseña"
         android:textColor="#2196F3"
-        android:textSize="14sp"
+        android:textSize="17sp"
         android:textStyle="bold" />
 
     <EditText
@@ -89,9 +94,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:padding="9dp"
         android:text="@string/btnCrearCuenta"
         android:textColor="#2196F3"
-        android:textStyle="bold"
-        android:padding="8dp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </LinearLayout>
