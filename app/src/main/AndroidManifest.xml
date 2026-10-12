@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegistrarActivity" />
+        <activity android:name=".DashboardActivity" />
     </application>
 
 </manifest>

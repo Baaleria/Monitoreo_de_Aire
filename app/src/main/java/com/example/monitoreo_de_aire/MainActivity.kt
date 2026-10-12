@@ -53,9 +53,9 @@ class MainActivity : AppCompatActivity() {
                         // Si ingresa bien
                         Toast.makeText(this@MainActivity, "✅ ¡Bienvenido!", Toast.LENGTH_SHORT).show()
                         // Redireccionamiendo a la pagina de inicio
-                        // val intent = Intent(this, DashboardActivity::class.java)
-                        // startActivity(intent)
-                        // finish()
+                        val intent = Intent(this, DashboardActivity::class.java)
+                        startActivity(intent)
+                        finish()
 
                     } else {
                         // Alertas de error
