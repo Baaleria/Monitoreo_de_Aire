@@ -1,5 +1,6 @@
 package com.example.monitoreo_de_aire
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -86,7 +87,11 @@ class RegistrarActivity : AppCompatActivity() {
                             userReference.setValue(userData)
                                 .addOnSuccessListener {
                                     Toast.makeText(this, "✅ Cuenta creada exitosamente", Toast.LENGTH_LONG).show()
-                                    // Regresamos para iniciar sesión
+
+                                    // Mandamos toda esta información a vincular
+                                    val intent = Intent(this, VincularActivity::class.java)
+                                    startActivity(intent)
+
                                     finish()
                                 }
                                 .addOnFailureListener {
