@@ -27,7 +27,7 @@
         <activity android:name=".RegistrarActivity" />
         <activity android:name=".DashboardActivity" />
         <activity android:name=".VincularActivity" />
-        <activity android:name=".VentacionActivity" />
+        <activity android:name=".VentilacionActivity" />
         <activity android:name=".DispositivosActivity" />
     </application>
 

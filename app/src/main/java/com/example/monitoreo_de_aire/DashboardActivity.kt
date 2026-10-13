@@ -63,7 +63,7 @@ class DashboardActivity : AppCompatActivity() {
         findViewById<NavigationView>(R.id.nav_view).setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_dispositivos -> menuLauncher.launch(Intent(this, DispositivosActivity::class.java))
-                R.id.nav_ventilacion -> menuLauncher.launch(Intent(this, VentacionActivity::class.java))
+                R.id.nav_ventilacion -> menuLauncher.launch(Intent(this, VentilacionActivity::class.java))
                 R.id.nav_cerrar_sesion -> {
                     // Primero soltamos el listener: sin sesión Firebase lo cancelaría con 'permission denied'
                     devicesListener?.let { devicesQuery?.removeEventListener(it) }

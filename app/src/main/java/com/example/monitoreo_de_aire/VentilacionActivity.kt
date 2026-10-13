@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 
-class VentacionActivity : AppCompatActivity() {
+class VentilacionActivity : AppCompatActivity() {
 
     private lateinit var switchExtractor: MaterialSwitch
     private lateinit var tvEstado: TextView
@@ -147,7 +147,7 @@ class VentacionActivity : AppCompatActivity() {
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val sensor = DispositivoActivo.elegir(this@VentacionActivity, uid, snapshot)
+                val sensor = DispositivoActivo.elegir(this@VentilacionActivity, uid, snapshot)
                 if (sensor == null) {
                     sensorRef = null
                     switchExtractor.isEnabled = false
