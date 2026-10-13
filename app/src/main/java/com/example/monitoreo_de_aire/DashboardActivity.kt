@@ -54,6 +54,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         configurarMenuLateral()
+        configurarAccesosRapidos()
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
@@ -113,6 +114,17 @@ class DashboardActivity : AppCompatActivity() {
             }
             drawer.closeDrawer(GravityCompat.START)
             true
+        }
+    }
+
+    // Atajos desde el Dashboard: el nombre del dispositivo abre la lista de dispositivos
+    // y la tarjeta "Sistema de Ventilación" abre el control del extractor
+    private fun configurarAccesosRapidos() {
+        binding.nombreSensor.setOnClickListener {
+            startActivity(Intent(this, DispositivosActivity::class.java))
+        }
+        binding.cardVentilacion.setOnClickListener {
+            startActivity(Intent(this, VentilacionActivity::class.java))
         }
     }
 
