@@ -3,6 +3,7 @@ package com.example.monitoreo_de_aire
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -67,6 +68,8 @@ class DashboardActivity : AppCompatActivity() {
         val usuarioActual = auth.currentUser
 
         if (usuarioActual != null) {
+            cargarNombreUsuario(usuarioActual.uid)
+
             // Todos los dispositivos del usuario; se muestra el que esté seleccionado
             val consulta = database.reference
                 .child("Dispositivos")
@@ -126,6 +129,19 @@ class DashboardActivity : AppCompatActivity() {
         binding.cardVentilacion.setOnClickListener {
             startActivity(Intent(this, VentilacionActivity::class.java))
         }
+    }
+
+    // En la cabecera azul del menú se muestra el nombre que el usuario eligió al registrarse
+    private fun cargarNombreUsuario(uid: String) {
+        val tvNombre = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tvNombreUsuario)
+        database.reference.child("Usuarios").child(uid).get()
+            .addOnSuccessListener { datos ->
+                // Las cuentas antiguas guardaron el nombre en "usuario"
+                val nombre = datos.child("nombre").getValue(String::class.java)
+                    ?: datos.child("usuario").getValue(String::class.java)
+                if (!nombre.isNullOrBlank()) tvNombre.text = nombre
+            }
+        // Si falla (sin Internet), queda el texto por defecto del encabezado
     }
 
     private fun cerrarSesion() {
