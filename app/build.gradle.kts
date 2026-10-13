@@ -9,6 +9,10 @@ android {
         version = release(37)
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.monitoreo_de_aire"
         minSdk = 24
@@ -21,8 +25,9 @@ android {
 
     buildTypes {
         release {
+            // R8: reduce y ofusca el código de la versión de entrega (dificulta la ingeniería inversa)
             optimization {
-                enable = false
+                enable = true
             }
         }
     }
