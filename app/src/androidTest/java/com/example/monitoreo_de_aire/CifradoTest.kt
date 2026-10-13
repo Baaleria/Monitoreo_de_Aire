@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 class CifradoKeystoreTest {
 
     private val contexto: Context
-    get() = InstrumentationRegistry.getInstrumentation().targetContext
+        get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
     fun cifrarYDescifrar_devuelveElMismoTexto() {
@@ -29,7 +29,7 @@ class CifradoKeystoreTest {
     @Test
     fun elTextoPlanoNoApareceEnElCifrado() {
         val cifrado = CifradoKeystore.cifrar("AIRE-001")!!
-                assertFalse(cifrado.contains("AIRE-001"))
+        assertFalse(cifrado.contains("AIRE-001"))
     }
 
     @Test
@@ -59,7 +59,7 @@ class CifradoKeystoreTest {
 
         // En el archivo de preferencias NO debe estar el código en texto plano
         val crudo = contexto.getSharedPreferences("monitoreo_prefs", Context.MODE_PRIVATE)
-                .getString("dispositivo_activo_uid-prueba", null)
+            .getString("dispositivo_activo_uid-prueba", null)
         assertNotNull(crudo)
         assertNotEquals("AIRE-001", crudo)
     }
