@@ -127,6 +127,7 @@ class VincularActivity : AppCompatActivity() {
                 dispositivoRef.updateChildren(actualizaciones)
                     .addOnSuccessListener {
                         Toast.makeText(this, "¡Dispositivo vinculado con éxito!", Toast.LENGTH_SHORT).show()
+                        DispositivoActivo.guardar(this, uid, codigo)
                         val intent = Intent(this, DashboardActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
