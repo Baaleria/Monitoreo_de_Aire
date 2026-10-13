@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.database.FirebaseDatabase
 
 class RegistrarActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityRegistrarBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -36,11 +35,12 @@ class RegistrarActivity : AppCompatActivity() {
         // Inicializamos Firebase Auth y Realtime Database
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
-
+        // Flecha y boton con direccionamiento
         binding.tvVolver.setOnClickListener { finish() }
         binding.btnRegistrar.setOnClickListener { registrar() }
     }
 
+    // Funcion de registrar
     private fun registrar() {
         val email = binding.correoElectronico.text.toString().trim()
         // El nombre se sanitiza antes de validarlo y guardarlo
@@ -49,16 +49,18 @@ class RegistrarActivity : AppCompatActivity() {
         val pass1 = binding.contrasenareg1.text.toString()
         val pass2 = binding.contrasenareg2.text.toString()
 
+        //Cadena de validaciones
+        //Ningun campo debe estar vacio
         if (email.isEmpty() || nombre.isEmpty() || pass1.isEmpty() || pass2.isEmpty()) {
             aviso(R.string.msg_campos_vacios)
             return
         }
-
+        // Debe de cumplir con un formato especifico
         if (!Validacion.correoValido(email)) {
             aviso(R.string.msg_correo_invalido)
             return
         }
-
+        // Debe de cumplir con un formato especifico
         if (!Validacion.nombreValido(nombre)) {
             Toast.makeText(
                 this,
@@ -67,13 +69,13 @@ class RegistrarActivity : AppCompatActivity() {
             ).show()
             return
         }
-
+        // Debe de cumplir con un formato especifico
         val errorPass = Validacion.errorPassword(pass1)
         if (errorPass != null) {
             Toast.makeText(this, mensajePassword(errorPass), Toast.LENGTH_LONG).show()
             return
         }
-
+        //Que las contraseñas coincidan
         if (pass1 != pass2) {
             aviso(R.string.msg_pass_no_coinciden)
             return
@@ -82,14 +84,14 @@ class RegistrarActivity : AppCompatActivity() {
         // Se bloquea el botón para evitar crear la cuenta dos veces
         binding.btnRegistrar.isEnabled = false
 
-        // Creamos la cuenta en Firebase Authentication
+        // Creamos la cuenta en Firebase Authentication, Aqui se guarda el hash de la contraseña
         auth.createUserWithEmailAndPassword(email, pass1)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     guardarPerfilYContinuar(nombre)
                 } else {
                     binding.btnRegistrar.isEnabled = true
-                    // Mensajes propios: no se muestra el texto técnico de Firebase
+                    // Mensajes de firebase modificados para que el usuario entienda que esta mal
                     val mensaje = when (task.exception) {
                         is FirebaseAuthUserCollisionException -> R.string.msg_correo_registrado
                         is FirebaseAuthWeakPasswordException -> R.string.msg_pass_debil
@@ -101,6 +103,7 @@ class RegistrarActivity : AppCompatActivity() {
             }
     }
 
+    //Mensajes de error especificos de error de contraseña
     private fun mensajePassword(error: Validacion.ErrorPassword): String = when (error) {
         Validacion.ErrorPassword.CORTA -> getString(R.string.msg_pass_corta, Validacion.MIN_PASSWORD)
         Validacion.ErrorPassword.LARGA -> getString(R.string.msg_pass_larga, Validacion.MAX_PASSWORD)
@@ -117,10 +120,8 @@ class RegistrarActivity : AppCompatActivity() {
             return
         }
 
-        // Minimización de datos: solo se guarda el nombre. El correo ya lo administra
-        // Firebase Authentication, no se duplica en la base de datos.
         val userData = hashMapOf("nombre" to nombre)
-
+        //Inyeccción de datos
         database.reference.child("Usuarios").child(uid).setValue(userData)
             .addOnSuccessListener {
                 aviso(R.string.msg_cuenta_creada, largo = true)
@@ -133,10 +134,12 @@ class RegistrarActivity : AppCompatActivity() {
             }
     }
 
+    //Formato de los avisos
     private fun aviso(@StringRes mensaje: Int, largo: Boolean = false) {
         Toast.makeText(this, mensaje, if (largo) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
     }
 
+    //Funcion para redireccionar
     private fun irAVincular() {
         startActivity(Intent(this, VincularActivity::class.java))
         finish()

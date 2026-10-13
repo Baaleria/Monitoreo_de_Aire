@@ -16,10 +16,12 @@ import com.google.firebase.auth.FirebaseAuthException
 
 class MainActivity : AppCompatActivity() {
 
+    // Variable de FirebaseAuth para verificar el inicio de sesión
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //Obtenemos la instancia de Firebase Auth
         super.onCreate(savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
@@ -29,7 +31,6 @@ class MainActivity : AppCompatActivity() {
             irAlDashboard()
             return
         }
-
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        //Botones
         binding.btnLogin.setOnClickListener { iniciarSesion() }
         binding.tvOlvide.setOnClickListener { recuperarContrasena() }
         binding.tvCreateAccount.setOnClickListener {
@@ -47,11 +48,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Funcion de inicio de sesión
     private fun iniciarSesion() {
         val email = binding.correo.text.toString().trim()
         // La contraseña NO se recorta: los espacios pueden ser parte de ella
         val password = binding.contrasena.text.toString()
 
+        // Corroboraciones de correo y contraseña
         if (email.isEmpty() || password.isEmpty()) {
             aviso(R.string.msg_login_campos_vacios)
             return
@@ -65,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         // Se bloquea el botón mientras se valida, para evitar envíos repetidos
         binding.btnLogin.isEnabled = false
 
+        // Auth verifica que la contraseña seea de ese correo en el servidor
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 binding.btnLogin.isEnabled = true
@@ -106,10 +110,12 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    // Funcion para aviso
     private fun aviso(@StringRes mensaje: Int, largo: Boolean = false) {
         Toast.makeText(this, mensaje, if (largo) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
     }
 
+    // Función para ir al dashboard
     private fun irAlDashboard() {
         val intent = Intent(this, DashboardActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

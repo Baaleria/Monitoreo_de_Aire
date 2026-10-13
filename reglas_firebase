@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "Usuarios": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "Dispositivos": {
+      ".indexOn": ["owner_uid"],
+      ".read": "auth != null && query.orderByChild == 'owner_uid' && query.equalTo == auth.uid",
+      "$codigo": {
+        ".read": "auth != null && data.child('owner_uid').val() === auth.uid",
+        ".write": "auth != null && data.exists() && (data.child('owner_uid').val() === '' || data.child('owner_uid').val() === auth.uid)"
+      }
+    }
+  }
+}
