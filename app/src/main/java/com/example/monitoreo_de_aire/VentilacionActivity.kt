@@ -1,17 +1,16 @@
 package com.example.monitoreo_de_aire
 
-import android.graphics.Color
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
 import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.materialswitch.MaterialSwitch
+import com.example.monitoreo_de_aire.databinding.ActivityVentilacionBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,13 +21,7 @@ import com.google.firebase.database.ValueEventListener
 
 class VentilacionActivity : AppCompatActivity() {
 
-    private lateinit var switchExtractor: MaterialSwitch
-    private lateinit var tvEstado: TextView
-    private lateinit var tvDuracion: TextView
-    private lateinit var seekDuracion: SeekBar
-    private lateinit var cardDuracion: CardView
-    private lateinit var btnAplicar: Button
-    private lateinit var tvAviso: TextView
+    private lateinit var binding: ActivityVentilacionBinding
 
     private var sensorRef: DatabaseReference? = null
     private var sensorQuery: Query? = null
@@ -49,9 +42,10 @@ class VentilacionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_ventilacion)
+        binding = ActivityVentilacionBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.ventilacion)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.ventilacion) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(
                 systemBars.left + dp(24),
@@ -62,15 +56,7 @@ class VentilacionActivity : AppCompatActivity() {
             insets
         }
 
-        switchExtractor = findViewById(R.id.switchExtractor)
-        tvEstado = findViewById(R.id.tvEstadoExtractor)
-        tvDuracion = findViewById(R.id.tvDuracion)
-        seekDuracion = findViewById(R.id.seekDuracion)
-        cardDuracion = findViewById(R.id.cardDuracion)
-        btnAplicar = findViewById(R.id.btnAplicar)
-        tvAviso = findViewById(R.id.tvAviso)
-
-        findViewById<android.view.View>(R.id.btnAtras).setOnClickListener {
+        binding.btnAtras.setOnClickListener {
             // Vuelve al Dashboard con el menú lateral abierto
             setResult(RESULT_OK)
             finish()
@@ -81,20 +67,20 @@ class VentilacionActivity : AppCompatActivity() {
         actualizarDuracionHabilitada(false)
 
         // Interruptor encendido / apagado
-        switchExtractor.setOnCheckedChangeListener { _, isChecked ->
+        binding.switchExtractor.setOnCheckedChangeListener { _, isChecked ->
             actualizarTextoEstado(isChecked)
             actualizarDuracionHabilitada(isChecked)
             // Aplicar solo se ve con el extractor encendido
-            btnAplicar.visibility = if (isChecked) android.view.View.VISIBLE else android.view.View.GONE
+            binding.btnAplicar.visibility = if (isChecked) View.VISIBLE else View.GONE
             // Apagar se guarda de inmediato (no necesita confirmar)
             if (!actualizandoDesdeDb && !isChecked) guardarEstado()
         }
 
         // Los cambios se envían a Firebase solo al presionar "Aplicar"
-        btnAplicar.setOnClickListener { guardarEstado() }
+        binding.btnAplicar.setOnClickListener { guardarEstado() }
 
         // Barra de duración: 1 a 15 minutos (progreso 0..14)
-        seekDuracion.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekDuracion.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 actualizarTextoDuracion(progress + 1)
             }
@@ -106,7 +92,7 @@ class VentilacionActivity : AppCompatActivity() {
 
         // Sin Internet no se pueden enviar órdenes: Firebase las dejaría en cola y el
         // extractor se encendería más tarde, al volver la conexión, sin que el usuario lo espere
-        avisoConexion = AvisoConexion(findViewById(R.id.ventilacion))
+        avisoConexion = AvisoConexion(binding.ventilacion)
         estadoRed = EstadoRed(this) { tipo ->
             hayRed = tipo != EstadoRed.TipoRed.SIN_RED
             actualizarControles()
@@ -129,39 +115,41 @@ class VentilacionActivity : AppCompatActivity() {
     // Los controles solo funcionan si hay dispositivo vinculado y hay Internet
     private fun actualizarControles() {
         val habilitado = sensorRef != null && hayRed
-        switchExtractor.isEnabled = habilitado
-        btnAplicar.isEnabled = habilitado
+        binding.switchExtractor.isEnabled = habilitado
+        binding.btnAplicar.isEnabled = habilitado
     }
 
     private fun dp(valor: Int): Int = (valor * resources.displayMetrics.density).toInt()
 
+    private fun color(@ColorRes id: Int) = ContextCompat.getColor(this, id)
+
     // La tarjeta de duración se ve gris y bloqueada mientras el extractor está apagado
     private fun actualizarDuracionHabilitada(habilitada: Boolean) {
-        seekDuracion.isEnabled = habilitada
-        tvDuracion.alpha = if (habilitada) 1f else 0.5f
-        cardDuracion.setCardBackgroundColor(
-            Color.parseColor(if (habilitada) "#FFFFFF" else "#E0E0E0")
+        binding.seekDuracion.isEnabled = habilitada
+        binding.tvDuracion.alpha = if (habilitada) 1f else 0.5f
+        binding.cardDuracion.setCardBackgroundColor(
+            color(if (habilitada) R.color.white else R.color.gris_claro)
         )
     }
 
     private fun mostrarAviso(texto: String) {
-        tvAviso.text = texto
-        tvAviso.visibility = android.view.View.VISIBLE
+        binding.tvAviso.text = texto
+        binding.tvAviso.visibility = View.VISIBLE
     }
 
-    private fun minutosActuales(): Int = seekDuracion.progress + 1
+    private fun minutosActuales(): Int = binding.seekDuracion.progress + 1
 
     private fun actualizarTextoDuracion(minutos: Int) {
-        tvDuracion.text = if (minutos == 1) "1 minuto" else "$minutos minutos"
+        binding.tvDuracion.text = resources.getQuantityString(R.plurals.minutos, minutos, minutos)
     }
 
     private fun actualizarTextoEstado(encendido: Boolean) {
         if (encendido) {
-            tvEstado.text = "Encendido"
-            tvEstado.setTextColor(Color.parseColor("#4CAF50"))
+            binding.tvEstadoExtractor.setText(R.string.estado_encendido)
+            binding.tvEstadoExtractor.setTextColor(color(R.color.verde_encendido))
         } else {
-            tvEstado.text = "Apagado"
-            tvEstado.setTextColor(Color.parseColor("#F44336"))
+            binding.tvEstadoExtractor.setText(R.string.estado_apagado)
+            binding.tvEstadoExtractor.setTextColor(color(R.color.rojo_apagado))
         }
     }
 
@@ -171,7 +159,7 @@ class VentilacionActivity : AppCompatActivity() {
     private fun cargarDispositivo() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         if (uid == null) {
-            Toast.makeText(this, "Sesión no válida. Inicia sesión nuevamente.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.msg_sesion_invalida, Toast.LENGTH_LONG).show()
             finish()
             return
         }
@@ -187,21 +175,21 @@ class VentilacionActivity : AppCompatActivity() {
                 val sensor = DispositivoActivo.elegir(this@VentilacionActivity, uid, snapshot)
                 if (sensor == null) {
                     sensorRef = null
-                    switchExtractor.isEnabled = false
-                    btnAplicar.isEnabled = false
+                    binding.switchExtractor.isEnabled = false
+                    binding.btnAplicar.isEnabled = false
                     actualizarDuracionHabilitada(false)
-                    mostrarAviso("Esta cuenta no tiene un dispositivo vinculado. Vincula uno desde Dispositivos.")
+                    mostrarAviso(getString(R.string.aviso_sin_dispositivo_vinculado))
                     return
                 }
 
-                tvAviso.visibility = android.view.View.GONE
+                binding.tvAviso.visibility = View.GONE
                 sensorRef = sensor.ref
                 actualizarControles()
                 escucharExtractor(sensor.ref.child("extractor"))
             }
 
             override fun onCancelled(error: DatabaseError) {
-                mostrarAviso("Error de base de datos: ${error.message}")
+                mostrarAviso(getString(R.string.msg_error_bd, error.message))
             }
         }
         sensorListener = listener
@@ -222,17 +210,17 @@ class VentilacionActivity : AppCompatActivity() {
                 val duracion = if (duracionDb < 1) 5 else duracionDb.coerceAtMost(15)
 
                 actualizandoDesdeDb = true
-                switchExtractor.isChecked = encendido
-                seekDuracion.progress = duracion - 1
+                binding.switchExtractor.isChecked = encendido
+                binding.seekDuracion.progress = duracion - 1
                 actualizarTextoEstado(encendido)
                 actualizarTextoDuracion(duracion)
                 actualizarDuracionHabilitada(encendido)
-                btnAplicar.visibility = if (encendido) android.view.View.VISIBLE else android.view.View.GONE
+                binding.btnAplicar.visibility = if (encendido) View.VISIBLE else View.GONE
                 actualizandoDesdeDb = false
             }
 
             override fun onCancelled(error: DatabaseError) {
-                mostrarAviso("Error de base de datos: ${error.message}")
+                mostrarAviso(getString(R.string.msg_error_bd, error.message))
             }
         }
         extractorListener = listener
@@ -243,17 +231,21 @@ class VentilacionActivity : AppCompatActivity() {
     private fun guardarEstado() {
         val ref = sensorRef ?: return
         if (!hayRed) {
-            Toast.makeText(this, "Sin conexión: no se puede enviar la orden", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.msg_sin_conexion_orden, Toast.LENGTH_LONG).show()
             return
         }
         val cambios = mapOf<String, Any>(
-            "extractor/encendido" to switchExtractor.isChecked,
+            "extractor/encendido" to binding.switchExtractor.isChecked,
             "extractor/duracion_minutos" to minutosActuales()
         )
         ref.updateChildren(cambios).addOnSuccessListener {
-            Toast.makeText(this, "Cambios aplicados", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.msg_cambios_aplicados, Toast.LENGTH_SHORT).show()
         }.addOnFailureListener { error ->
-            Toast.makeText(this, "No se pudo guardar: ${error.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                getString(R.string.msg_no_guardo, error.message ?: ""),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

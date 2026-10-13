@@ -2,14 +2,13 @@ package com.example.monitoreo_de_aire
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.monitoreo_de_aire.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuthException
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,89 +31,83 @@ class MainActivity : AppCompatActivity() {
         }
 
         enableEdgeToEdge()
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val etCorreo = findViewById<EditText>(R.id.correo)
-        val etPassword = findViewById<EditText>(R.id.contrasena)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
-        val tvCreateAccount = findViewById<TextView>(R.id.tvCreateAccount)
-        val tvOlvide = findViewById<TextView>(R.id.tvOlvide)
-
-        btnLogin.setOnClickListener {
-            val email = etCorreo.text.toString().trim()
-            // La contraseña NO se recorta: los espacios pueden ser parte de ella
-            val password = etPassword.text.toString()
-
-            // Alerta si los campos están vacíos
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "⚠️ Por favor, ingresa tu correo y contraseña.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (!Validacion.correoValido(email)) {
-                Toast.makeText(this, "⚠️ El formato del correo no es válido.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // Se bloquea el botón mientras se valida, para evitar envíos repetidos
-            btnLogin.isEnabled = false
-
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    btnLogin.isEnabled = true
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "✅ ¡Bienvenido!", Toast.LENGTH_SHORT).show()
-                        irAlDashboard()
-                    } else {
-                        // Mensaje genérico: no revela si el correo existe o no
-                        val mensaje = when (task.exception) {
-                            is FirebaseNetworkException ->
-                                "❌ Sin conexión. Revisa tu Wi-Fi o datos móviles."
-                            is FirebaseTooManyRequestsException ->
-                                "❌ Demasiados intentos. Espera unos minutos."
-                            is FirebaseAuthException ->
-                                if ((task.exception as FirebaseAuthException).errorCode == "ERROR_TOO_MANY_REQUESTS")
-                                    "❌ Demasiados intentos. Espera unos minutos."
-                                else
-                                    "❌ Correo o contraseña incorrectos."
-                            else -> "❌ No se pudo iniciar sesión. Inténtalo de nuevo."
-                        }
-                        Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show()
-                    }
-                }
-        }
-
-        // Recuperar contraseña por correo (lo envía Firebase)
-        tvOlvide.setOnClickListener {
-            val email = etCorreo.text.toString().trim()
-            if (email.isEmpty() || !Validacion.correoValido(email)) {
-                Toast.makeText(this, "⚠️ Escribe tu correo en el campo para recuperar la contraseña.", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-            auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(this) { task ->
-                    if (task.exception is FirebaseNetworkException) {
-                        Toast.makeText(this, "❌ Sin conexión. Revisa tu Wi-Fi o datos móviles.", Toast.LENGTH_LONG).show()
-                    } else {
-                        // Mismo mensaje exista o no el correo, para no revelar qué cuentas existen
-                        Toast.makeText(
-                            this,
-                            "📧 Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-        }
-
-        tvCreateAccount.setOnClickListener {
+        binding.btnLogin.setOnClickListener { iniciarSesion() }
+        binding.tvOlvide.setOnClickListener { recuperarContrasena() }
+        binding.tvCreateAccount.setOnClickListener {
             startActivity(Intent(this, RegistrarActivity::class.java))
         }
+    }
+
+    private fun iniciarSesion() {
+        val email = binding.correo.text.toString().trim()
+        // La contraseña NO se recorta: los espacios pueden ser parte de ella
+        val password = binding.contrasena.text.toString()
+
+        if (email.isEmpty() || password.isEmpty()) {
+            aviso(R.string.msg_login_campos_vacios)
+            return
+        }
+
+        if (!Validacion.correoValido(email)) {
+            aviso(R.string.msg_correo_invalido)
+            return
+        }
+
+        // Se bloquea el botón mientras se valida, para evitar envíos repetidos
+        binding.btnLogin.isEnabled = false
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                binding.btnLogin.isEnabled = true
+                if (task.isSuccessful) {
+                    aviso(R.string.msg_bienvenida)
+                    irAlDashboard()
+                } else {
+                    // Mensaje genérico: no revela si el correo existe o no
+                    val mensaje = when (val error = task.exception) {
+                        is FirebaseNetworkException -> R.string.msg_sin_conexion
+                        is FirebaseTooManyRequestsException -> R.string.msg_demasiados_intentos
+                        is FirebaseAuthException ->
+                            if (error.errorCode == "ERROR_TOO_MANY_REQUESTS")
+                                R.string.msg_demasiados_intentos
+                            else
+                                R.string.msg_credenciales_incorrectas
+                        else -> R.string.msg_login_error_generico
+                    }
+                    aviso(mensaje, largo = true)
+                }
+            }
+    }
+
+    // Recuperar contraseña por correo (lo envía Firebase)
+    private fun recuperarContrasena() {
+        val email = binding.correo.text.toString().trim()
+        if (email.isEmpty() || !Validacion.correoValido(email)) {
+            aviso(R.string.msg_recuperar_pedir_correo, largo = true)
+            return
+        }
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener(this) { task ->
+                if (task.exception is FirebaseNetworkException) {
+                    aviso(R.string.msg_sin_conexion, largo = true)
+                } else {
+                    // Mismo mensaje exista o no el correo, para no revelar qué cuentas existen
+                    aviso(R.string.msg_recuperar_enviado, largo = true)
+                }
+            }
+    }
+
+    private fun aviso(@StringRes mensaje: Int, largo: Boolean = false) {
+        Toast.makeText(this, mensaje, if (largo) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
     }
 
     private fun irAlDashboard() {

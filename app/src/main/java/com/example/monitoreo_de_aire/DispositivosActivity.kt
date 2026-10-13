@@ -1,18 +1,17 @@
 package com.example.monitoreo_de_aire
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.monitoreo_de_aire.databinding.ActivityDispositivosBinding
+import com.example.monitoreo_de_aire.databinding.ItemDispositivoBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,8 +21,7 @@ import com.google.firebase.database.ValueEventListener
 
 class DispositivosActivity : AppCompatActivity() {
 
-    private lateinit var lista: LinearLayout
-    private lateinit var tvAviso: TextView
+    private lateinit var binding: ActivityDispositivosBinding
 
     private var uid: String = ""
     private var query: Query? = null
@@ -33,9 +31,10 @@ class DispositivosActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_dispositivos)
+        binding = ActivityDispositivosBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.dispositivos)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.dispositivos) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(
                 systemBars.left + dp(24),
@@ -46,17 +45,14 @@ class DispositivosActivity : AppCompatActivity() {
             insets
         }
 
-        lista = findViewById(R.id.listaDispositivos)
-        tvAviso = findViewById(R.id.tvAviso)
-
         // Vuelve al Dashboard con el menú lateral abierto
-        findViewById<View>(R.id.btnAtras).setOnClickListener {
+        binding.btnAtras.setOnClickListener {
             setResult(RESULT_OK)
             finish()
         }
 
         // Ir a vincular un dispositivo nuevo
-        findViewById<View>(R.id.btnVincularOtro).setOnClickListener {
+        binding.btnVincularOtro.setOnClickListener {
             startActivity(Intent(this, VincularActivity::class.java).putExtra("desde_menu", true))
         }
 
@@ -81,7 +77,7 @@ class DispositivosActivity : AppCompatActivity() {
 
             override fun onCancelled(error: DatabaseError) {
                 if (isFinishing || FirebaseAuth.getInstance().currentUser == null) return
-                mostrarAviso("Error de base de datos: ${error.message}")
+                mostrarAviso(getString(R.string.msg_error_bd, error.message))
             }
         }
         listener = escucha
@@ -90,45 +86,58 @@ class DispositivosActivity : AppCompatActivity() {
 
     private fun dp(valor: Int): Int = (valor * resources.displayMetrics.density).toInt()
 
+    private fun color(@ColorRes id: Int) = ContextCompat.getColor(this, id)
+
     private fun mostrarAviso(texto: String) {
-        tvAviso.text = texto
-        tvAviso.visibility = View.VISIBLE
+        binding.tvAviso.text = texto
+        binding.tvAviso.visibility = View.VISIBLE
     }
 
     // Dibuja una tarjeta por cada dispositivo del usuario; la seleccionada va en azul
     private fun mostrar(snapshot: DataSnapshot) {
-        lista.removeAllViews()
+        binding.listaDispositivos.removeAllViews()
 
         if (!snapshot.hasChildren()) {
-            mostrarAviso("Aún no tienes dispositivos vinculados.")
+            mostrarAviso(getString(R.string.aviso_sin_dispositivos))
             return
         }
-        tvAviso.visibility = View.GONE
+        binding.tvAviso.visibility = View.GONE
 
         val activo = DispositivoActivo.elegir(this, uid, snapshot)?.key
         val inflater = LayoutInflater.from(this)
 
         for (sensor in snapshot.children) {
             val codigo = sensor.key ?: continue
-            val item = inflater.inflate(R.layout.item_dispositivo, lista, false) as CardView
-            val tvNombre = item.findViewById<TextView>(R.id.tvNombreDispositivo)
-            val ivIcono = item.findViewById<ImageView>(R.id.ivIconoDispositivo)
+            val item = ItemDispositivoBinding.inflate(inflater, binding.listaDispositivos, false)
 
             val nombre = sensor.child("nombre").getValue(String::class.java)
-            tvNombre.text = if (nombre.isNullOrBlank()) codigo else nombre
-            ivIcono.setImageResource(iconoPara(sensor.child("icono").getValue(String::class.java)))
+            item.tvNombreDispositivo.text = if (nombre.isNullOrBlank()) codigo else nombre
+            item.ivIconoDispositivo.setImageResource(
+                iconoPara(sensor.child("icono").getValue(String::class.java))
+            )
+
+            // Estado de conexión del dispositivo (lo publica el ESP32)
+            val conectado = sensor.child("estadoConexion").value as? Boolean ?: false
+            item.tvEstadoDispositivo.setText(
+                if (conectado) R.string.estado_conectado else R.string.estado_desconectado
+            )
+            item.tvEstadoDispositivo.setTextColor(
+                color(if (conectado) R.color.verde_encendido else R.color.rojo_apagado)
+            )
 
             val seleccionado = codigo == activo
-            item.setCardBackgroundColor(Color.parseColor(if (seleccionado) "#8FADF3" else "#C8C8C8"))
-            val colorTexto = Color.parseColor(if (seleccionado) "#2F6BE8" else "#333333")
-            tvNombre.setTextColor(colorTexto)
-            ivIcono.setColorFilter(colorTexto)
+            item.root.setCardBackgroundColor(
+                color(if (seleccionado) R.color.azul_seleccion_fondo else R.color.gris_tarjeta)
+            )
+            val colorTexto = color(if (seleccionado) R.color.azul_seleccion_texto else R.color.gris_texto)
+            item.tvNombreDispositivo.setTextColor(colorTexto)
+            item.ivIconoDispositivo.setColorFilter(colorTexto)
 
-            item.setOnClickListener {
+            item.root.setOnClickListener {
                 DispositivoActivo.guardar(this, uid, codigo)
                 ultimoSnapshot?.let { mostrar(it) }
             }
-            lista.addView(item)
+            binding.listaDispositivos.addView(item.root)
         }
     }
 
