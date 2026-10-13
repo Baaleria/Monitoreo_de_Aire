@@ -2,4 +2,33 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Azules -->
+    <color name="azul_primario">#0055FF</color>
+    <color name="azul_claro">#4C8DFF</color>
+    <color name="azul_etiqueta">#2196F3</color>
+    <color name="azul_etiqueta_alta">#2B6DE3</color>
+    <color name="azul_oscuro">#1F3A8A</color>
+    <color name="azul_seleccion_fondo">#8FADF3</color>
+    <color name="azul_seleccion_texto">#2F6BE8</color>
+
+    <!-- Estados -->
+    <color name="rojo_baja">#D32F2F</color>
+    <color name="rojo_etiqueta_baja">#8B0000</color>
+    <color name="rojo_apagado">#F44336</color>
+    <color name="verde_encendido">#4CAF50</color>
+
+    <!-- Grises -->
+    <color name="gris_texto">#333333</color>
+    <color name="gris_icono">#666666</color>
+    <color name="gris_linea">#A9A9A9</color>
+    <color name="gris_medio">#9E9E9E</color>
+    <color name="gris_claro">#E0E0E0</color>
+    <color name="gris_boton">#E3E3E3</color>
+    <color name="gris_tarjeta">#C8C8C8</color>
+    <color name="fondo_dashboard">#F0F4F8</color>
+
+    <!-- Transparencias -->
+    <color name="blanco_translucido">#80FFFFFF</color>
+    <color name="negro_translucido">#66000000</color>
 </resources>

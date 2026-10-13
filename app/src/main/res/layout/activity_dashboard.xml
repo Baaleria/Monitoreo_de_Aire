@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F0F4F8">
+        android:background="@color/fondo_dashboard">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="#FFFFFF">
+            android:background="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,8 +31,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Monitoreo del dispositivo"
-                    android:textColor="#0055FF"
+                    android:text="@string/dashboard_titulo"
+                    android:textColor="@color/azul_primario"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -40,8 +40,8 @@
                     android:id="@+id/nombre_sensor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cargando sensor..."
-                    android:textColor="#333333"
+                    android:text="@string/dashboard_cargando"
+                    android:textColor="@color/gris_texto"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -50,7 +50,7 @@
                     android:layout_height="2dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="24dp"
-                    android:background="#A9A9A9" />
+                    android:background="@color/gris_linea" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="420dp"
                         app:cardCornerRadius="48dp"
-                        app:cardBackgroundColor="#4C8DFF"
+                        app:cardBackgroundColor="@color/azul_claro"
                         app:cardElevation="0dp">
 
                         <LinearLayout
@@ -78,8 +78,8 @@
                                 android:id="@+id/calidad_aire_lb"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Calidad de aire"
-                                android:textColor="#FFFFFF"
+                                android:text="@string/dashboard_calidad_aire"
+                                android:textColor="@color/white"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
                                 android:background="@drawable/bg_rounded_text"
@@ -91,19 +91,19 @@
                                 android:id="@+id/estado_aire"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="--"
+                                android:text="@string/valor_vacio"
                                 android:textSize="100sp"
-                                android:textColor="#80FFFFFF"
+                                android:textColor="@color/blanco_translucido"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/sensor_val"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Valor MQ-135: --"
+                                android:text="@string/dashboard_valor_vacio"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/white"
                                 android:layout_marginTop="16dp"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -117,7 +117,7 @@
                         android:layout_marginBottom="24dp"
                         app:cardUseCompatPadding="true"
                         app:cardCornerRadius="24dp"
-                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardBackgroundColor="@color/white"
                         app:cardElevation="16dp">
 
                         <LinearLayout
@@ -138,8 +138,8 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Sistema de Ventilación"
-                                    android:textColor="#4C8DFF"
+                                    android:text="@string/dashboard_sistema_ventilacion"
+                                    android:textColor="@color/azul_claro"
                                     android:textSize="20sp"
                                     android:textStyle="bold" />
 
@@ -153,16 +153,16 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@string/textVentilador2"
-                                        android:textColor="#000000"
+                                        android:text="@string/dashboard_extractor_label"
+                                        android:textColor="@color/black"
                                         android:textSize="18sp"/>
 
                                     <TextView
                                         android:id="@+id/extractor"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="--"
-                                        android:textColor="#A9A9A9"
+                                        android:text="@string/valor_vacio"
+                                        android:textColor="@color/gris_linea"
                                         android:textSize="16sp"
                                         android:textStyle="bold"/>
                                 </LinearLayout>
@@ -173,7 +173,7 @@
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
                                 android:src="@drawable/baseline_mode_fan_off_24"
-                                app:tint="#666666"/>
+                                app:tint="@color/gris_icono"/>
 
                         </LinearLayout> <!-- Fin del contenedor de las dos columnas -->
                     </androidx.cardview.widget.CardView>
@@ -192,7 +192,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginBottom="88dp"
             android:src="@drawable/ic_menu_hamburguesa"
-            android:contentDescription="Abrir menú"
+            android:contentDescription="@string/cd_abrir_menu"
             android:clickable="true"
             android:focusable="true" />
 
@@ -204,7 +204,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/menu_lateral" />
 

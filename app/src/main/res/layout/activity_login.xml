@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="32dp"
     android:gravity="center_horizontal"
-    android:background="#FFFFFF">
+    android:background="@color/white">
 
     <!-- Espacio superior -->
     <Space
@@ -18,17 +18,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/textLogin"
+        android:text="@string/login_bienvenida"
         android:textSize="36sp"
         android:textStyle="bold"
-        android:textColor="#000000" />
+        android:textColor="@color/black" />
 
     <View
         android:layout_width="100dp"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="32dp"
-        android:background="#A9A9A9" />
+        android:background="@color/gris_linea" />
 
     <Space
         android:layout_width="match_parent"
@@ -39,18 +39,19 @@
     <TextView
         android:layout_width="327dp"
         android:layout_height="wrap_content"
-        android:text="@string/inputCorreoUsuario"
-        android:textColor="#2196F3"
+        android:text="@string/label_correo"
+        android:textColor="@color/azul_etiqueta"
         android:textSize="17sp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/correo"
+        android:maxLength="254"
         android:layout_width="329dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="#A9A9A9"
-        android:hint="@string/placeholderCorreoUsuario"
+        android:backgroundTint="@color/gris_linea"
+        android:hint="@string/hint_correo"
         android:inputType="textEmailAddress"
         android:paddingVertical="12dp" />
 
@@ -58,18 +59,19 @@
     <TextView
         android:layout_width="323dp"
         android:layout_height="wrap_content"
-        android:text="@string/inputContraseña"
-        android:textColor="#2196F3"
+        android:text="@string/label_contrasena"
+        android:textColor="@color/azul_etiqueta"
         android:textSize="17sp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/contrasena"
+        android:maxLength="64"
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="#A9A9A9"
-        android:hint="••••••••"
+        android:backgroundTint="@color/gris_linea"
+        android:hint="@string/hint_contrasena"
         android:inputType="textPassword"
         android:paddingVertical="12dp" />
 
@@ -77,10 +79,10 @@
         android:id="@+id/btnLogin"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:text="@string/btnIngresar"
+        android:text="@string/login_btn_ingresar"
         android:textSize="20sp"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2196F3"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/azul_etiqueta"
         app:cornerRadius="16dp" />
 
     <TextView
@@ -89,8 +91,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:padding="8dp"
-        android:text="@string/textOlvide"
-        android:textColor="#2196F3"
+        android:text="@string/login_olvide"
+        android:textColor="@color/azul_etiqueta"
         android:textSize="16sp" />
 
     <!-- Espacio inferior -->
@@ -105,8 +107,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:padding="9dp"
-        android:text="@string/btnCrearCuenta"
-        android:textColor="#2196F3"
+        android:text="@string/crear_cuenta"
+        android:textColor="@color/azul_etiqueta"
         android:textSize="20sp"
         android:textStyle="bold" />
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/white"
     android:padding="24dp">
 
     <!-- Flecha de retroceso: Ahora está SOLA, más arriba y separada del título -->
@@ -15,7 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dp"
         android:src="@drawable/baseline_arrow_back_ios_24"
-        app:tint="#000000" />
+        app:tint="@color/black" />
 
     <!-- Título: Ahora está debajo de la flecha con una buena separación -->
     <TextView
@@ -24,8 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/btnAtras"
         android:layout_marginTop="24dp"
-        android:text="Vincular dispositivo"
-        android:textColor="#000000"
+        android:text="@string/vincular_titulo"
+        android:textColor="@color/black"
         android:textSize="28sp"
         android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
         android:layout_below="@id/tvTitle"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
-        android:background="#A9A9A9" />
+        android:background="@color/gris_linea" />
 
     <!-- Contenedor del Formulario -->
     <LinearLayout
@@ -50,57 +50,60 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ingresar código"
-            android:textColor="#0055FF"
+            android:text="@string/vincular_codigo_label"
+            android:textColor="@color/azul_primario"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/input_codigo"
+            android:maxLength="30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Revisar en tarjeta de ESP-32"
+            android:hint="@string/vincular_codigo_hint"
             android:textSize="16sp"
             android:paddingVertical="12dp"
-            android:backgroundTint="#E0E0E0"
+            android:backgroundTint="@color/gris_claro"
             android:layout_marginBottom="20dp"/>
 
         <!-- Campo Nombre -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre Del Dispositivo"
-            android:textColor="#0055FF"
+            android:text="@string/vincular_nombre_label"
+            android:textColor="@color/azul_primario"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/input_nombre"
+            android:maxLength="50"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Sala 1"
+            android:hint="@string/vincular_nombre_hint"
             android:textSize="16sp"
             android:paddingVertical="12dp"
-            android:backgroundTint="#E0E0E0"
+            android:backgroundTint="@color/gris_claro"
             android:layout_marginBottom="20dp"/>
 
         <!-- Campo Ubicación -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ubicación"
-            android:textColor="#0055FF"
+            android:text="@string/vincular_ubicacion_label"
+            android:textColor="@color/azul_primario"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/input_ubicacion"
+            android:maxLength="60"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Sala de estar"
+            android:hint="@string/vincular_ubicacion_hint"
             android:textSize="16sp"
             android:paddingVertical="12dp"
-            android:backgroundTint="#E0E0E0"
+            android:backgroundTint="@color/gris_claro"
             android:layout_marginBottom="24dp"/>
 
         <!-- Tarjeta de Íconos -->
@@ -109,7 +112,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="#FFFFFF"
+            app:cardBackgroundColor="@color/white"
             android:layout_marginHorizontal="4dp"
             android:layout_marginBottom="16dp">
 
@@ -123,8 +126,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Seleccionar icono"
-                    android:textColor="#0055FF"
+                    android:text="@string/vincular_icono_label"
+                    android:textColor="@color/azul_primario"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp"/>
@@ -132,7 +135,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#E0E0E0"
+                    android:background="@color/gris_claro"
                     android:layout_marginBottom="16dp"/>
 
                 <!-- Cuadrícula de íconos -->
@@ -151,7 +154,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="12dp"
                         android:src="@drawable/ic_bed_outline"
-                        app:tint="#666666"/>
+                        app:tint="@color/gris_icono"/>
 
                     <ImageView
                         android:id="@+id/iconDevice"
@@ -159,7 +162,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="12dp"
                         android:src="@drawable/baseline_mode_fan_off_24"
-                        app:tint="#666666"/>
+                        app:tint="@color/gris_icono"/>
 
                     <ImageView
                         android:id="@+id/iconEco"
@@ -167,7 +170,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="12dp"
                         android:src="@drawable/ic_bed_outline"
-                        app:tint="#666666"/>
+                        app:tint="@color/gris_icono"/>
 
                     <ImageView
                         android:id="@+id/iconClothes"
@@ -175,7 +178,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="12dp"
                         android:src="@drawable/baseline_mode_fan_off_24"
-                        app:tint="#666666"/>
+                        app:tint="@color/gris_icono"/>
 
                     <!-- Fila 2 -->
                     <ImageView
@@ -184,7 +187,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="12dp"
                         android:src="@drawable/ic_bed_outline"
-                        app:tint="#666666"/>
+                        app:tint="@color/gris_icono"/>
 
                     <ImageView
                         android:id="@+id/iconFan"
@@ -192,7 +195,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="12dp"
                         android:src="@drawable/baseline_mode_fan_off_24"
-                        app:tint="#666666"/>
+                        app:tint="@color/gris_icono"/>
 
                     <ImageView
                         android:id="@+id/iconHome"
@@ -200,7 +203,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="12dp"
                         android:src="@drawable/ic_bed_outline"
-                        app:tint="#666666"/>
+                        app:tint="@color/gris_icono"/>
 
                     <ImageView
                         android:id="@+id/iconBag"
@@ -208,7 +211,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="12dp"
                         android:src="@drawable/baseline_mode_fan_off_24"
-                        app:tint="#666666"/>
+                        app:tint="@color/gris_icono"/>
                 </GridLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -216,15 +219,15 @@
 
     <!-- Botón Añadir abajo a la derecha -->
     <Button
-        android:id="@+id/btnAñadir"
+        android:id="@+id/btnAnadir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:text="Añadir"
-        android:textColor="#FFFFFF"
+        android:text="@string/vincular_btn_anadir"
+        android:textColor="@color/white"
         android:textStyle="bold"
-        android:backgroundTint="#0055FF"
+        android:backgroundTint="@color/azul_primario"
         app:cornerRadius="20dp"
         android:paddingHorizontal="32dp"
         android:paddingVertical="12dp"/>

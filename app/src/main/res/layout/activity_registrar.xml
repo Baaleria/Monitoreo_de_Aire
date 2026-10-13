@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:src="@drawable/baseline_arrow_back_ios_24"
             android:scaleType="centerInside"
             android:layout_gravity="start"
-            android:contentDescription="Volver al Login" />
+            android:contentDescription="@string/cd_volver_login" />
 
         <Space
             android:layout_width="match_parent"
@@ -31,10 +31,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/textCrearCuenta"
+            android:text="@string/crear_cuenta"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:gravity="center_horizontal" />
 
         <View
@@ -42,7 +42,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:layout_gravity="center_horizontal"
-            android:background="#A9A9A9" />
+            android:background="@color/gris_linea" />
 
         <Space
             android:layout_width="match_parent"
@@ -53,69 +53,73 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Correo Electrónico"
-            android:textColor="#2196F3"
+            android:text="@string/label_correo"
+            android:textColor="@color/azul_etiqueta"
             android:textSize="17sp"
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/Correo_electronico"
+            android:id="@+id/correo_electronico"
+            android:maxLength="254"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="correoelectronico@email.com"
+            android:hint="@string/hint_correo"
             android:inputType="textEmailAddress"
-            android:backgroundTint="#A9A9A9"
+            android:backgroundTint="@color/gris_linea"
             android:layout_marginBottom="16dp" />
 
         <!-- Nombre de Usuario -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nombre de Usuario"
-            android:textColor="#2196F3"
+            android:text="@string/registrar_usuario_label"
+            android:textColor="@color/azul_etiqueta"
             android:textSize="17sp"
             android:textStyle="bold" />
         <EditText
             android:id="@+id/usuario"
+            android:maxLength="50"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Usuario"
+            android:hint="@string/registrar_usuario_hint"
             android:inputType="text"
-            android:backgroundTint="#A9A9A9"
+            android:backgroundTint="@color/gris_linea"
             android:layout_marginBottom="16dp" />
 
         <!-- Contraseña -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contraseña"
-            android:textColor="#2196F3"
+            android:text="@string/label_contrasena"
+            android:textColor="@color/azul_etiqueta"
             android:textSize="17sp"
             android:textStyle="bold" />
         <EditText
             android:id="@+id/contrasenareg1"
+            android:maxLength="64"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="••••••••"
+            android:hint="@string/hint_contrasena"
             android:inputType="textPassword"
-            android:backgroundTint="#A9A9A9"
+            android:backgroundTint="@color/gris_linea"
             android:layout_marginBottom="16dp" />
 
         <!-- Confirmar Contraseña -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Confirmar Contraseña"
+            android:text="@string/registrar_confirmar_label"
             android:textSize="17sp"
-            android:textColor="#2196F3"
+            android:textColor="@color/azul_etiqueta"
             android:textStyle="bold" />
         <EditText
             android:id="@+id/contrasenareg2"
+            android:maxLength="64"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="••••••••"
+            android:hint="@string/hint_contrasena"
             android:inputType="textPassword"
-            android:backgroundTint="#A9A9A9" />
+            android:backgroundTint="@color/gris_linea" />
 
         <Space
             android:layout_width="match_parent"
@@ -128,9 +132,9 @@
             android:layout_width="120dp"
             android:layout_height="50dp"
             android:layout_gravity="end"
-            android:backgroundTint="#2196F3"
-            android:text="@string/btnCrear"
-            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/azul_etiqueta"
+            android:text="@string/registrar_btn_crear"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:cornerRadius="16dp" />
 

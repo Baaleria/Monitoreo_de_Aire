@@ -1,16 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Monitoreo_de_Aire</string>
-    <string name="textLogin">Bienvenido</string>
-    <string name="inputCorreoUsuario">Correo Electronico</string>
-    <string name="placeholderCorreoUsuario">correoelectronico@email.com</string>
-    <string name="inputContraseña">Contraseña</string>
-    <string name="btnIngresar">Ingresar</string>
-    <string name="btnCrearCuenta">Crear Cuenta</string>
-    <string name="textCrearCuenta">Crear Cuenta</string>
-    <string name="btnCrear">Crear</string>
-    <string name="textDashboard">Monitoreo del Dispositivo</string>
-    <string name="textCalidad">Calidad de Aire</string>
-    <string name="textVentilador">Sistema de Ventilación</string>
-    <string name="textVentilador2">Extractor:</string>
-    <string name="textOlvide">¿Olvidaste tu contraseña?</string>
+
+    <!-- Textos comunes -->
+    <string name="label_correo">Correo electrónico</string>
+    <string name="hint_correo">correoelectronico@email.com</string>
+    <string name="label_contrasena">Contraseña</string>
+    <string name="hint_contrasena">••••••••</string>
+    <string name="crear_cuenta">Crear Cuenta</string>
+    <string name="valor_vacio">--</string>
+    <string name="estado_encendido">Encendido</string>
+    <string name="estado_apagado">Apagado</string>
+    <string name="estado_conectado">Conectado</string>
+    <string name="estado_desconectado">Desconectado</string>
+    <string name="cd_volver">Volver</string>
+
+    <!-- Login -->
+    <string name="login_bienvenida">Bienvenido</string>
+    <string name="login_btn_ingresar">Ingresar</string>
+    <string name="login_olvide">¿Olvidaste tu contraseña?</string>
+
+    <!-- Registro -->
+    <string name="cd_volver_login">Volver al Login</string>
+    <string name="registrar_usuario_label">Nombre de Usuario</string>
+    <string name="registrar_usuario_hint">Usuario</string>
+    <string name="registrar_confirmar_label">Confirmar Contraseña</string>
+    <string name="registrar_btn_crear">Crear</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_titulo">Monitoreo del dispositivo</string>
+    <string name="dashboard_cargando">Cargando sensor...</string>
+    <string name="dashboard_calidad_aire">Calidad de aire</string>
+    <string name="dashboard_valor_vacio">Valor MQ-135: --</string>
+    <string name="dashboard_sistema_ventilacion">Sistema de Ventilación</string>
+    <string name="dashboard_extractor_label">Extractor:</string>
+    <string name="dashboard_sin_sensores">Sin sensores asignados</string>
+    <string name="dashboard_esperando">Esperando conexión...</string>
+    <string name="dashboard_nombre_sensor">%1$s ⚙️</string>
+    <string name="dashboard_valor_conectado">Valor MQ-135: %1$d 🟢</string>
+    <string name="dashboard_valor_desconectado">Valor MQ-135: %1$d 🔴</string>
+    <string name="calidad_alta">Alta</string>
+    <string name="calidad_baja">Baja</string>
+    <string name="cd_abrir_menu">Abrir menú</string>
+
+    <!-- Menú lateral -->
+    <string name="nav_header_titulo">Monitoreo de Aire</string>
+    <string name="cd_usuario">Usuario</string>
+    <string name="menu_dispositivos">Dispositivos</string>
+    <string name="menu_ventilacion">Ventilación</string>
+    <string name="menu_sistema">Sistema</string>
+    <string name="menu_cerrar_sesion">Cerrar sesión</string>
+
+    <!-- Dispositivos -->
+    <string name="dispositivos_titulo">Mis Dispositivos</string>
+    <string name="dispositivos_vincular_otro">+  Vincular Otro</string>
+    <string name="cd_vincular_otro">Vincular otro dispositivo</string>
+    <string name="cd_icono_dispositivo">Ícono del dispositivo</string>
+    <string name="aviso_sin_dispositivos">Aún no tienes dispositivos vinculados.</string>
+
+    <!-- Ventilación -->
+    <string name="ventilacion_titulo">Control del Extractor</string>
+    <string name="ventilacion_estado_label">Estado del Extractor</string>
+    <string name="ventilacion_duracion_label">Duración (Minutos)</string>
+    <string name="ventilacion_duracion_inicial">5 minutos</string>
+    <string name="ventilacion_min_1">1 min</string>
+    <string name="ventilacion_min_15">15 min</string>
+    <string name="ventilacion_btn_aplicar">Aplicar</string>
+    <string name="aviso_sin_dispositivo_vinculado">Esta cuenta no tiene un dispositivo vinculado. Vincula uno desde Dispositivos.</string>
+    <plurals name="minutos">
+        <item quantity="one">%d minuto</item>
+        <item quantity="other">%d minutos</item>
+    </plurals>
+
+    <!-- Vincular -->
+    <string name="vincular_titulo">Vincular dispositivo</string>
+    <string name="vincular_codigo_label">Ingresar código</string>
+    <string name="vincular_codigo_hint">Revisar en tarjeta de ESP-32</string>
+    <string name="vincular_nombre_label">Nombre Del Dispositivo</string>
+    <string name="vincular_nombre_hint">Sala 1</string>
+    <string name="vincular_ubicacion_label">Ubicación</string>
+    <string name="vincular_ubicacion_hint">Sala de estar</string>
+    <string name="vincular_icono_label">Seleccionar icono</string>
+    <string name="vincular_btn_anadir">Añadir</string>
+
+    <!-- Mensajes: sesión y registro -->
+    <string name="msg_login_campos_vacios">⚠️ Por favor, ingresa tu correo y contraseña.</string>
+    <string name="msg_correo_invalido">⚠️ El formato del correo no es válido.</string>
+    <string name="msg_bienvenida">✅ ¡Bienvenido!</string>
+    <string name="msg_sin_conexion">❌ Sin conexión. Revisa tu Wi-Fi o datos móviles.</string>
+    <string name="msg_demasiados_intentos">❌ Demasiados intentos. Espera unos minutos.</string>
+    <string name="msg_credenciales_incorrectas">❌ Correo o contraseña incorrectos.</string>
+    <string name="msg_login_error_generico">❌ No se pudo iniciar sesión. Inténtalo de nuevo.</string>
+    <string name="msg_recuperar_pedir_correo">⚠️ Escribe tu correo en el campo para recuperar la contraseña.</string>
+    <string name="msg_recuperar_enviado">📧 Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.</string>
+    <string name="msg_campos_vacios">⚠️ Por favor, llena todos los campos.</string>
+    <string name="msg_nombre_invalido">⚠️ El nombre solo puede tener letras, números, espacios y . , _ \' - (máximo %1$d caracteres).</string>
+    <string name="msg_pass_no_coinciden">❌ Las contraseñas no coinciden.</string>
+    <string name="msg_pass_corta">⚠️ La contraseña debe tener al menos %1$d caracteres.</string>
+    <string name="msg_pass_larga">⚠️ La contraseña no puede superar los %1$d caracteres.</string>
+    <string name="msg_pass_sin_letra">⚠️ La contraseña debe incluir al menos una letra.</string>
+    <string name="msg_pass_sin_numero">⚠️ La contraseña debe incluir al menos un número.</string>
+    <string name="msg_correo_registrado">❌ Este correo ya está registrado.</string>
+    <string name="msg_pass_debil">❌ La contraseña es demasiado débil.</string>
+    <string name="msg_registro_error_generico">❌ No se pudo crear la cuenta. Inténtalo de nuevo.</string>
+    <string name="msg_sesion_error">Error de sesión. Inicia sesión nuevamente.</string>
+    <string name="msg_sesion_invalida">Sesión no válida. Inicia sesión nuevamente.</string>
+    <string name="msg_cuenta_creada">✅ Cuenta creada exitosamente</string>
+    <string name="msg_cuenta_creada_sin_nombre">⚠️ Cuenta creada, pero no se pudo guardar el nombre</string>
+
+    <!-- Mensajes: dispositivos y extractor -->
+    <string name="msg_error_bd">Error de base de datos: %1$s</string>
+    <string name="msg_vincular_atras_confirmar">¿Estás seguro? No estás vinculando un dispositivo. Presiona de nuevo si quieres salir.</string>
+    <string name="msg_completa_campos">Por favor, completa todos los campos de texto</string>
+    <string name="msg_codigo_invalido">Código no válido. Usa solo letras, números y guiones (ej: AIRE-001)</string>
+    <string name="msg_nombre_ubicacion_invalidos">Nombre o ubicación no válidos. Usa solo letras, números, espacios y . , _ \' - (nombre máx. %1$d, ubicación máx. %2$d caracteres).</string>
+    <string name="msg_selecciona_icono">Por favor, selecciona un ícono para tu dispositivo</string>
+    <string name="msg_vinculado">¡Dispositivo vinculado con éxito!</string>
+    <string name="msg_vincular_error">No se pudo vincular. Verifica el código: puede no existir o estar vinculado a otra cuenta.</string>
+    <string name="msg_sesion_error_login">Error de sesión. Vuelve a iniciar sesión.</string>
+    <string name="msg_sin_conexion_orden">Sin conexión: no se puede enviar la orden</string>
+    <string name="msg_cambios_aplicados">Cambios aplicados</string>
+    <string name="msg_no_guardo">No se pudo guardar: %1$s</string>
+
+    <!-- Aviso de conexión -->
+    <string name="aviso_sin_red">📡 Sin conexión a Internet. Los datos pueden estar desactualizados.</string>
+    <string name="aviso_red_restablecida">✅ Conexión restablecida (%1$s)</string>
+    <string name="red_wifi">Wi-Fi</string>
+    <string name="red_datos_moviles">datos móviles</string>
+    <string name="red_otra">otra red</string>
 </resources>

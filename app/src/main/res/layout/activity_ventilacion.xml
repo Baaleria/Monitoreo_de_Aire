@@ -4,7 +4,7 @@
     android:id="@+id/ventilacion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/white"
     android:orientation="vertical"
     android:padding="24dp">
 
@@ -16,10 +16,10 @@
         android:layout_marginTop="8dp"
         android:padding="8dp"
         android:src="@drawable/baseline_arrow_back_ios_24"
-        android:contentDescription="Volver"
+        android:contentDescription="@string/cd_volver"
         android:clickable="true"
         android:focusable="true"
-        app:tint="#000000" />
+        app:tint="@color/black" />
 
     <!-- Título -->
     <TextView
@@ -27,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center_horizontal"
-        android:text="Control del Extractor"
-        android:textColor="#000000"
+        android:text="@string/ventilacion_titulo"
+        android:textColor="@color/black"
         android:textSize="28sp"
         android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="32dp"
-        android:background="#A9A9A9" />
+        android:background="@color/gris_linea" />
 
     <!-- Aviso cuando no hay dispositivo o falla la base de datos -->
     <TextView
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:gravity="center_horizontal"
-        android:textColor="#D32F2F"
+        android:textColor="@color/rojo_baja"
         android:textSize="14sp"
         android:visibility="gone" />
 
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:layout_marginBottom="24dp"
-        app:cardBackgroundColor="#FFFFFF"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp">
 
@@ -70,8 +70,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Estado del Extractor"
-                android:textColor="#0055FF"
+                android:text="@string/ventilacion_estado_label"
+                android:textColor="@color/azul_primario"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -87,8 +87,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:text="Apagado"
-                    android:textColor="#F44336"
+                    android:text="@string/estado_apagado"
+                    android:textColor="@color/rojo_apagado"
                     android:textSize="18sp" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
@@ -96,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    app:thumbTint="#FFFFFF"
+                    app:thumbTint="@color/white"
                     app:trackTint="@color/switch_track_tint" />
             </LinearLayout>
         </LinearLayout>
@@ -108,7 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
-        app:cardBackgroundColor="#E0E0E0"
+        app:cardBackgroundColor="@color/gris_claro"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp">
 
@@ -121,8 +121,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Duración (Minutos)"
-                android:textColor="#0055FF"
+                android:text="@string/ventilacion_duracion_label"
+                android:textColor="@color/azul_primario"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -131,8 +131,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="5 minutos"
-                android:textColor="#1F3A8A"
+                android:text="@string/ventilacion_duracion_inicial"
+                android:textColor="@color/azul_oscuro"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -144,8 +144,8 @@
                 android:enabled="false"
                 android:max="14"
                 android:progress="4"
-                android:progressTint="#0055FF"
-                android:thumbTint="#0055FF" />
+                android:progressTint="@color/azul_primario"
+                android:thumbTint="@color/azul_primario" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -155,16 +155,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:text="1 min"
-                    android:textColor="#666666"
+                    android:text="@string/ventilacion_min_1"
+                    android:textColor="@color/gris_icono"
                     android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="15 min"
-                    android:textColor="#666666"
+                    android:text="@string/ventilacion_min_15"
+                    android:textColor="@color/gris_icono"
                     android:textSize="12sp" />
             </RelativeLayout>
         </LinearLayout>
@@ -181,13 +181,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:backgroundTint="#0055FF"
+        android:backgroundTint="@color/azul_primario"
         android:enabled="false"
         android:visibility="gone"
         android:paddingHorizontal="32dp"
         android:paddingVertical="12dp"
-        android:text="Aplicar"
-        android:textColor="#FFFFFF"
+        android:text="@string/ventilacion_btn_aplicar"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:cornerRadius="24dp" />
 </LinearLayout>
