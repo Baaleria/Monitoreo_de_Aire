@@ -1,169 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/dashboard"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- Contenido principal: dashboard actual -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:background="#F0F4F8">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Monitoreo del dispositivo"
-            android:textColor="#0055FF"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/nombre_sensor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cargando sensor..."
-            android:textColor="#333333"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="150dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:background="#A9A9A9" />
-
-        <RelativeLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/dashboard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false">
+            android:orientation="vertical"
+            android:background="#FFFFFF">
 
-            <!-- Cuadrado Azul -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/calidad_aire"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="420dp"
-                app:cardCornerRadius="48dp"
-                app:cardBackgroundColor="#4C8DFF"
-                app:cardElevation="0dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center_horizontal">
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Monitoreo del dispositivo"
+                    android:textColor="#0055FF"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/nombre_sensor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cargando sensor..."
+                    android:textColor="#333333"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="#A9A9A9" />
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:paddingBottom="60dp">
+                    android:clipToPadding="false">
 
-                    <!-- Etiqueta calidad de aire -->
-                    <TextView
-                        android:id="@+id/calidad_aire_lb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Calidad de aire"
-                        android:textColor="#FFFFFF"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:background="@drawable/bg_rounded_text"
-                        android:paddingHorizontal="24dp"
-                        android:paddingVertical="8dp"
-                        android:layout_marginBottom="16dp"/>
-
-                    <TextView
-                        android:id="@+id/estado_aire"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textSize="100sp"
-                        android:textColor="#80FFFFFF"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/sensor_val"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Valor MQ-135: --"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginTop="16dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Tarjeta Blanca -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="350dp"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="24dp"
-                app:cardUseCompatPadding="true"
-                app:cardCornerRadius="24dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardElevation="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="24dp"
-                    android:paddingVertical="20dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <!-- Textos columna -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Sistema de Ventilación"
-                            android:textColor="#4C8DFF"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                    <!-- Cuadrado Azul -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/calidad_aire"
+                        android:layout_width="match_parent"
+                        android:layout_height="420dp"
+                        app:cardCornerRadius="48dp"
+                        app:cardBackgroundColor="#4C8DFF"
+                        app:cardElevation="0dp">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="4dp">
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:paddingBottom="60dp">
 
+                            <!-- Etiqueta calidad de aire -->
                             <TextView
+                                android:id="@+id/calidad_aire_lb"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Ventilador: "
-                                android:textColor="#000000"
-                                android:textSize="18sp"/>
+                                android:text="Calidad de aire"
+                                android:textColor="#FFFFFF"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_rounded_text"
+                                android:paddingHorizontal="24dp"
+                                android:paddingVertical="8dp"
+                                android:layout_marginBottom="16dp"/>
 
                             <TextView
-                                android:id="@+id/extractor"
+                                android:id="@+id/estado_aire"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="--"
-                                android:textColor="#A9A9A9"
-                                android:textSize="16sp"
-                                android:textStyle="bold"/>
+                                android:textSize="100sp"
+                                android:textColor="#80FFFFFF"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/sensor_val"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Valor MQ-135: --"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                android:textColor="#FFFFFF"
+                                android:layout_marginTop="16dp"/>
                         </LinearLayout>
-                    </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
-                    <!-- Icono en columna -->
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:src="@drawable/baseline_mode_fan_off_24"
-                        app:tint="#666666"/>
+                    <!-- Tarjeta Blanca -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="350dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginBottom="24dp"
+                        app:cardUseCompatPadding="true"
+                        app:cardCornerRadius="24dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardElevation="16dp">
 
-                </LinearLayout> <!-- Fin del contenedor de las dos columnas -->
-            </androidx.cardview.widget.CardView>
-        </RelativeLayout>
-    </LinearLayout>
-</LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="24dp"
+                            android:paddingVertical="20dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <!-- Textos columna -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Sistema de Ventilación"
+                                    android:textColor="#4C8DFF"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginTop="4dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Ventilador: "
+                                        android:textColor="#000000"
+                                        android:textSize="18sp"/>
+
+                                    <TextView
+                                        android:id="@+id/extractor"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="#A9A9A9"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold"/>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <!-- Icono en columna -->
+                            <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/baseline_mode_fan_off_24"
+                                app:tint="#666666"/>
+
+                        </LinearLayout> <!-- Fin del contenedor de las dos columnas -->
+                    </androidx.cardview.widget.CardView>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Botón para abrir el menú lateral -->
+        <ImageView
+            android:id="@+id/btnMenuHamburguesa"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="88dp"
+            android:src="@drawable/ic_menu_hamburguesa"
+            android:contentDescription="Abrir menú"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </RelativeLayout>
+
+    <!-- Menú lateral -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#FFFFFF"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/menu_lateral" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

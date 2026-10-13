@@ -1,11 +1,17 @@
 package com.example.monitoreo_de_aire
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import android.widget.ImageView
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.graphics.drawable.GradientDrawable
@@ -13,12 +19,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
+    private var devicesQuery: Query? = null
+    private var devicesListener: ValueEventListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +38,38 @@ class DashboardActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+
+        // Menu lateral
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
+        // Al volver de Dispositivos / Ventilación con la flecha, se reabre el menú
+        val menuLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) drawer.openDrawer(GravityCompat.START)
+        }
+        findViewById<ImageView>(R.id.btnMenuHamburguesa).setOnClickListener {
+            drawer.openDrawer(GravityCompat.START)
+        }
+        findViewById<NavigationView>(R.id.nav_view).setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_dispositivos -> menuLauncher.launch(
+                    Intent(this, VincularActivity::class.java).putExtra("desde_menu", true)
+                )
+                R.id.nav_ventilacion -> menuLauncher.launch(Intent(this, VentacionActivity::class.java))
+                R.id.nav_cerrar_sesion -> {
+                    // Primero soltamos el listener: sin sesión Firebase lo cancelaría con 'permission denied'
+                    devicesListener?.let { devicesQuery?.removeEventListener(it) }
+                    devicesListener = null
+                    FirebaseAuth.getInstance().signOut()
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+                else -> Toast.makeText(this, "Próximamente", Toast.LENGTH_SHORT).show()
+            }
+            drawer.closeDrawer(GravityCompat.START)
+            true
         }
 
         // Vinculamos IDs de activity
@@ -51,24 +92,25 @@ class DashboardActivity : AppCompatActivity() {
 
             val userDevicesRef = database.reference
                 .child("Dispositivos")
-                .child(uid)
+                .orderByChild("owner_uid")
+                .equalTo(uid)
+            devicesQuery = userDevicesRef
 
             // Lecturas en tiempo real de las métricas en la base de datos
-            userDevicesRef.addValueEventListener(object : ValueEventListener {
+            devicesListener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
 
                         val firstSensor = snapshot.children.firstOrNull()
 
                         if (firstSensor != null) {
-                            val rawSensorName = firstSensor.key ?: "Sensor Desconocido"
-
-                            val cleanName = rawSensorName.replace("_", " ").replaceFirstChar { it.uppercase() }
+                            val cleanName = firstSensor.child("nombre").getValue(String::class.java)
+                                ?: firstSensor.key ?: "Sensor Desconocido"
                             nombre_sensor.text = "$cleanName ⚙️"
 
-                            val estadoConexion = firstSensor.child("estadoConexion").getValue(Boolean::class.java) ?: false
-                            val extractorEncendido = firstSensor.child("extractor").child("encendido").getValue(Boolean::class.java) ?: false
-                            val valorMq135 = firstSensor.child("mq135_valor").getValue(Int::class.java) ?: 0
+                            val estadoConexion = firstSensor.child("estadoConexion").value as? Boolean ?: false
+                            val extractorEncendido = firstSensor.child("extractor").child("encendido").value as? Boolean ?: false
+                            val valorMq135 = (firstSensor.child("mq135_valor").value as? Number)?.toInt() ?: 0
 
                             // Logica matematica
                             val labelBackground = calidad_aire_lb.background as? GradientDrawable
@@ -119,13 +161,20 @@ class DashboardActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    if (isFinishing || auth.currentUser == null) return
                     Toast.makeText(this@DashboardActivity, "Error de base de datos: ${error.message}", Toast.LENGTH_SHORT).show()
                 }
-            })
+            }
+            userDevicesRef.addValueEventListener(devicesListener!!)
         } else {
             // Mensajes en caso de error de inicio de sesión y redireccionamiento
             Toast.makeText(this, "Sesión no válida. Inicia sesión nuevamente.", Toast.LENGTH_LONG).show()
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        devicesListener?.let { devicesQuery?.removeEventListener(it) }
     }
 }

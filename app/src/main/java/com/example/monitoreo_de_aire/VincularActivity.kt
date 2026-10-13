@@ -53,15 +53,17 @@ class VincularActivity : AppCompatActivity() {
             // Si la diferencia es menor a 2000 ms (doble clic)
             if (tiempoActual - tiempoUltimoClicAtras < 2000) {
 
-                // Creamos el viaje directo hacia tu Dashboard
-                val intent = Intent(this, DashboardActivity::class.java)
-
-                // Opcional pero recomendado: Estas banderas limpian el historial para que
-                // si el usuario presiona "Atrás" estando en el Dashboard, no vuelva aquí ni al Login.
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
-                startActivity(intent)
-                finish()
+                if (this@VincularActivity.intent.getBooleanExtra("desde_menu", false)) {
+                    // Se abrió desde el menú del Dashboard: volvemos y se reabre el menú
+                    setResult(RESULT_OK)
+                    finish()
+                } else {
+                    // Flujo de registro: no hay Dashboard debajo, así que lo abrimos
+                    val intentDashboard = Intent(this, DashboardActivity::class.java)
+                    intentDashboard.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intentDashboard)
+                    finish()
+                }
 
             } else {
                 // Primer clic: Muestra tu mensaje personalizado
@@ -125,7 +127,10 @@ class VincularActivity : AppCompatActivity() {
                 dispositivoRef.updateChildren(actualizaciones)
                     .addOnSuccessListener {
                         Toast.makeText(this, "¡Dispositivo vinculado con éxito!", Toast.LENGTH_SHORT).show()
-                        finish() // Cerramos esta pantalla y volvemos al Dashboard
+                        val intent = Intent(this, DashboardActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
                     }
                     .addOnFailureListener { error ->
                         Toast.makeText(this, "Error al vincular: ${error.message}", Toast.LENGTH_LONG).show()
