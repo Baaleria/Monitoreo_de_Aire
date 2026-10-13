@@ -34,15 +34,19 @@ class VentilacionActivity : AppCompatActivity() {
     private var sensorQuery: Query? = null
     private var sensorListener: ValueEventListener? = null
 
+    // Escucha en tiempo real del nodo Dispositivos/{codigo}/extractor
+    private var extractorRef: DatabaseReference? = null
+    private var extractorListener: ValueEventListener? = null
+
     // Evita que un cambio venido de Firebase se vuelva a escribir en Firebase
     private var actualizandoDesdeDb = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_ventacion)
+        setContentView(R.layout.activity_ventilacion)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.ventacion)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.ventilacion)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(
                 systemBars.left + dp(24),
@@ -130,7 +134,9 @@ class VentilacionActivity : AppCompatActivity() {
         }
     }
 
-    // Busca el primer dispositivo del usuario y escucha sus cambios
+    // Busca el dispositivo seleccionado del usuario (una sola vez) y después escucha en
+    // tiempo real SOLO su nodo "extractor". Así las lecturas del sensor no reinician el
+    // interruptor mientras el usuario lo está usando.
     private fun cargarDispositivo() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         if (uid == null) {
@@ -161,9 +167,27 @@ class VentilacionActivity : AppCompatActivity() {
                 sensorRef = sensor.ref
                 switchExtractor.isEnabled = true
                 btnAplicar.isEnabled = true
+                escucharExtractor(sensor.ref.child("extractor"))
+            }
 
-                val encendido = sensor.child("extractor").child("encendido").value as? Boolean ?: false
-                val duracionDb = (sensor.child("extractor").child("duracion_minutos").value as? Number)?.toInt() ?: 0
+            override fun onCancelled(error: DatabaseError) {
+                mostrarAviso("Error de base de datos: ${error.message}")
+            }
+        }
+        sensorListener = listener
+        query.addListenerForSingleValueEvent(listener)
+    }
+
+    // Refleja en pantalla el estado del extractor cada vez que cambia en Firebase
+    // (por ejemplo, cuando el dispositivo lo apaga al terminar el tiempo)
+    private fun escucharExtractor(ref: DatabaseReference) {
+        extractorListener?.let { extractorRef?.removeEventListener(it) }
+        extractorRef = ref
+
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val encendido = snapshot.child("encendido").value as? Boolean ?: false
+                val duracionDb = (snapshot.child("duracion_minutos").value as? Number)?.toInt() ?: 0
                 // Si en la base hay 0 (sin configurar) se muestra 5 minutos por defecto
                 val duracion = if (duracionDb < 1) 5 else duracionDb.coerceAtMost(15)
 
@@ -181,8 +205,8 @@ class VentilacionActivity : AppCompatActivity() {
                 mostrarAviso("Error de base de datos: ${error.message}")
             }
         }
-        sensorListener = listener
-        query.addListenerForSingleValueEvent(listener)
+        extractorListener = listener
+        ref.addValueEventListener(listener)
     }
 
     // Guarda estado y duración en Dispositivos/{codigo}/extractor
@@ -202,5 +226,6 @@ class VentilacionActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         sensorListener?.let { sensorQuery?.removeEventListener(it) }
+        extractorListener?.let { extractorRef?.removeEventListener(it) }
     }
 }

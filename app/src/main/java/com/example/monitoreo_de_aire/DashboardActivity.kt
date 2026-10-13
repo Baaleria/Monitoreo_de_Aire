@@ -25,6 +25,12 @@ import com.google.firebase.database.ValueEventListener
 
 class DashboardActivity : AppCompatActivity() {
 
+    companion object {
+        // Valor crudo del MQ-135 desde el cual la calidad del aire se considera baja.
+        // Debe calibrarse con el sensor real (medir con aire limpio y con aire contaminado).
+        private const val UMBRAL_CALIDAD_BAJA = 400
+    }
+
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
     private var devicesQuery: Query? = null
@@ -154,7 +160,7 @@ class DashboardActivity : AppCompatActivity() {
         // Logica matematica
         val labelBackground = calidadAireLb.background as? GradientDrawable
 
-        if (valorMq135 < 400) {
+        if (valorMq135 < UMBRAL_CALIDAD_BAJA) {
             // Aire limpio - Calidad Alta
             estadoAire.text = "Alta"
             calidadAire.setCardBackgroundColor(Color.parseColor("#4C8DFF"))

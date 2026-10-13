@@ -11,6 +11,6 @@
     <string name="textDashboard">Monitoreo del Dispositivo</string>
     <string name="textCalidad">Calidad de Aire</string>
     <string name="textVentilador">Sistema de Ventilación</string>
-    <string name="textVentilador2">Ventilador:</string>
+    <string name="textVentilador2">Extractor:</string>
     <string name="textOlvide">¿Olvidaste tu contraseña?</string>
 </resources>

@@ -89,13 +89,19 @@ class VincularActivity : AppCompatActivity() {
         // Lógica de Añadir
         btnAñadir.setOnClickListener {
             // Obtenemos los textos que escribió el usuario
-            val codigo = input_codigo.text.toString().trim()
+            val codigo = input_codigo.text.toString().trim().uppercase()
             val nombre = input_nombre.text.toString().trim()
             val ubicacion = input_ubicacion.text.toString().trim()
 
             // Validamos que no haya dejado nada vacío
             if (codigo.isEmpty() || nombre.isEmpty() || ubicacion.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos de texto", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // El código es una llave de Firebase: se valida el formato antes de usarlo
+            if (!Validacion.codigoDispositivoValido(codigo)) {
+                Toast.makeText(this, "Código no válido. Usa solo letras, números y guiones (ej: AIRE-001)", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
@@ -133,8 +139,13 @@ class VincularActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     }
-                    .addOnFailureListener { error ->
-                        Toast.makeText(this, "Error al vincular: ${error.message}", Toast.LENGTH_LONG).show()
+                    .addOnFailureListener {
+                        // Las reglas de Firebase rechazan códigos que no existen o que ya tienen otro dueño
+                        Toast.makeText(
+                            this,
+                            "No se pudo vincular. Verifica el código: puede no existir o estar vinculado a otra cuenta.",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
             } else {
                 Toast.makeText(this, "Error de sesión. Vuelve a iniciar sesión.", Toast.LENGTH_LONG).show()
