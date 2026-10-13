@@ -36,6 +36,10 @@ class DashboardActivity : AppCompatActivity() {
     private var devicesQuery: Query? = null
     private var devicesListener: ValueEventListener? = null
 
+    // Vigilancia de la conexión a Internet (usa ACCESS_NETWORK_STATE)
+    private lateinit var estadoRed: EstadoRed
+    private lateinit var avisoConexion: AvisoConexion
+
     // Últimos datos recibidos: se vuelven a dibujar al volver de elegir otro dispositivo
     private var ultimoSnapshot: DataSnapshot? = null
 
@@ -98,6 +102,10 @@ class DashboardActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
+        // Aviso cuando se pierde o vuelve la conexión
+        avisoConexion = AvisoConexion(findViewById(R.id.dashboard))
+        estadoRed = EstadoRed(this) { tipo -> avisoConexion.mostrar(tipo) }
+
         // Verificamos el inicio de sesión
         val usuarioActual = auth.currentUser
 
@@ -128,6 +136,16 @@ class DashboardActivity : AppCompatActivity() {
             Toast.makeText(this, "Sesión no válida. Inicia sesión nuevamente.", Toast.LENGTH_LONG).show()
             finish()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        estadoRed.iniciar()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        estadoRed.detener()
     }
 
     override fun onResume() {

@@ -38,6 +38,11 @@ class VentilacionActivity : AppCompatActivity() {
     private var extractorRef: DatabaseReference? = null
     private var extractorListener: ValueEventListener? = null
 
+    // Vigilancia de la conexión a Internet (usa ACCESS_NETWORK_STATE)
+    private lateinit var estadoRed: EstadoRed
+    private lateinit var avisoConexion: AvisoConexion
+    private var hayRed = true
+
     // Evita que un cambio venido de Firebase se vuelva a escribir en Firebase
     private var actualizandoDesdeDb = false
 
@@ -99,7 +104,33 @@ class VentilacionActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
+        // Sin Internet no se pueden enviar órdenes: Firebase las dejaría en cola y el
+        // extractor se encendería más tarde, al volver la conexión, sin que el usuario lo espere
+        avisoConexion = AvisoConexion(findViewById(R.id.ventilacion))
+        estadoRed = EstadoRed(this) { tipo ->
+            hayRed = tipo != EstadoRed.TipoRed.SIN_RED
+            actualizarControles()
+            avisoConexion.mostrar(tipo)
+        }
+
         cargarDispositivo()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        estadoRed.iniciar()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        estadoRed.detener()
+    }
+
+    // Los controles solo funcionan si hay dispositivo vinculado y hay Internet
+    private fun actualizarControles() {
+        val habilitado = sensorRef != null && hayRed
+        switchExtractor.isEnabled = habilitado
+        btnAplicar.isEnabled = habilitado
     }
 
     private fun dp(valor: Int): Int = (valor * resources.displayMetrics.density).toInt()
@@ -165,8 +196,7 @@ class VentilacionActivity : AppCompatActivity() {
 
                 tvAviso.visibility = android.view.View.GONE
                 sensorRef = sensor.ref
-                switchExtractor.isEnabled = true
-                btnAplicar.isEnabled = true
+                actualizarControles()
                 escucharExtractor(sensor.ref.child("extractor"))
             }
 
@@ -212,6 +242,10 @@ class VentilacionActivity : AppCompatActivity() {
     // Guarda estado y duración en Dispositivos/{codigo}/extractor
     private fun guardarEstado() {
         val ref = sensorRef ?: return
+        if (!hayRed) {
+            Toast.makeText(this, "Sin conexión: no se puede enviar la orden", Toast.LENGTH_LONG).show()
+            return
+        }
         val cambios = mapOf<String, Any>(
             "extractor/encendido" to switchExtractor.isChecked,
             "extractor/duracion_minutos" to minutosActuales()
