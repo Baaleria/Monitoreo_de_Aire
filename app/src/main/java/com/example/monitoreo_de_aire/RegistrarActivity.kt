@@ -86,7 +86,7 @@ class RegistrarActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, pass1)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    guardarPerfilYContinuar(nombre, email)
+                    guardarPerfilYContinuar(nombre)
                 } else {
                     binding.btnRegistrar.isEnabled = true
                     // Mensajes propios: no se muestra el texto técnico de Firebase
@@ -108,8 +108,8 @@ class RegistrarActivity : AppCompatActivity() {
         Validacion.ErrorPassword.SIN_NUMERO -> getString(R.string.msg_pass_sin_numero)
     }
 
-    // Guarda nombre y correo en Usuarios/{uid} y sigue a Vincular
-    private fun guardarPerfilYContinuar(nombre: String, email: String) {
+    // Guarda el nombre en Usuarios/{uid} y sigue a Vincular
+    private fun guardarPerfilYContinuar(nombre: String) {
         val uid = auth.currentUser?.uid
         if (uid == null) {
             aviso(R.string.msg_sesion_error, largo = true)
@@ -117,10 +117,9 @@ class RegistrarActivity : AppCompatActivity() {
             return
         }
 
-        val userData = hashMapOf(
-            "nombre" to nombre,
-            "correo" to email
-        )
+        // Minimización de datos: solo se guarda el nombre. El correo ya lo administra
+        // Firebase Authentication, no se duplica en la base de datos.
+        val userData = hashMapOf("nombre" to nombre)
 
         database.reference.child("Usuarios").child(uid).setValue(userData)
             .addOnSuccessListener {
