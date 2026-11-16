@@ -128,9 +128,12 @@ class DispositivosActivity : AppCompatActivity() {
             val conectado = estadoReportado &&
                     (System.currentTimeMillis() - ultimaLectura in 0L..45_000L)
 
+
             item.tvEstadoDispositivo.setText(
-                if (conectado) R.string.estado_conectado else R.string.estado_desconectado
+                if (conectado) R.string.estado_conectado
+                else R.string.estado_desconectado
             )
+
             item.tvEstadoDispositivo.setTextColor(
                 color(if (conectado) R.color.verde_encendido else R.color.rojo_apagado)
             )

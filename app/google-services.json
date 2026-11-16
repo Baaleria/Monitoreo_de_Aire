@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "502887846613",
+    "firebase_url": "https://monitorea-de-calidad-de-aire-default-rtdb.firebaseio.com",
     "project_id": "monitorea-de-calidad-de-aire",
     "storage_bucket": "monitorea-de-calidad-de-aire.firebasestorage.app"
   },
