@@ -190,7 +190,16 @@ class DashboardActivity : AppCompatActivity() {
             ?: sensor.key ?: "Sensor Desconocido"
         binding.nombreSensor.text = getString(R.string.dashboard_nombre_sensor, cleanName)
 
-        val estadoConexion = sensor.child("estadoConexion").value as? Boolean ?: false
+
+        val conectado = sensor.child("estadoConexion").value as? Boolean ?: false
+
+        val ultimaLectura = (
+                sensor.child("ultimaLectura").value as? Number
+                )?.toLong() ?: 0L
+
+        val estadoConexion = conectado &&
+                (System.currentTimeMillis() - ultimaLectura in 0L..45_000L)
+
         val extractorEncendido = sensor.child("extractor").child("encendido").value as? Boolean ?: false
         val valorMq135 = (sensor.child("mq135_valor").value as? Number)?.toInt() ?: 0
 

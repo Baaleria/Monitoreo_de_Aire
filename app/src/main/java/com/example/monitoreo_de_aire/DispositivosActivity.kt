@@ -117,7 +117,17 @@ class DispositivosActivity : AppCompatActivity() {
             )
 
             // Estado de conexión del dispositivo (lo publica el ESP32)
-            val conectado = sensor.child("estadoConexion").value as? Boolean ?: false
+
+            val estadoReportado =
+                sensor.child("estadoConexion").value as? Boolean ?: false
+
+            val ultimaLectura = (
+                    sensor.child("ultimaLectura").value as? Number
+                    )?.toLong() ?: 0L
+
+            val conectado = estadoReportado &&
+                    (System.currentTimeMillis() - ultimaLectura in 0L..45_000L)
+
             item.tvEstadoDispositivo.setText(
                 if (conectado) R.string.estado_conectado else R.string.estado_desconectado
             )

@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ServerValue
 
 class VentilacionActivity : AppCompatActivity() {
 
@@ -234,10 +235,13 @@ class VentilacionActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.msg_sin_conexion_orden, Toast.LENGTH_LONG).show()
             return
         }
+
         val cambios = mapOf<String, Any>(
             "extractor/encendido" to binding.switchExtractor.isChecked,
-            "extractor/duracion_minutos" to minutosActuales()
+            "extractor/duracion_minutos" to minutosActuales(),
+            "extractor/solicitud_ms" to ServerValue.TIMESTAMP
         )
+
         ref.updateChildren(cambios).addOnSuccessListener {
             Toast.makeText(this, R.string.msg_cambios_aplicados, Toast.LENGTH_SHORT).show()
         }.addOnFailureListener { error ->
