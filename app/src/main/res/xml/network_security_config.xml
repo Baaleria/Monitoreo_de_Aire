@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    El tráfico en claro (HTTP) se permite ÚNICAMENTE hacia la IP del ESP32
+    dentro de la red local, que exige token en cada petición.
+    Todo el tráfico hacia Firebase y demás dominios sigue siendo solo HTTPS.
+    IMPORTANTE: cambia la IP por la que imprime el Monitor Serial del ESP32.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain>172.20.10.150</domain>
+    </domain-config>
+</network-security-config>
