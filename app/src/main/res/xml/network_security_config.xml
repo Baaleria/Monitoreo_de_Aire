@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!--
     El tráfico en claro (HTTP) se permite ÚNICAMENTE hacia la IP del ESP32
     dentro de la red local, que exige token en cada petición.
@@ -9,6 +8,6 @@
 <network-security-config>
     <base-config cleartextTrafficPermitted="false" />
     <domain-config cleartextTrafficPermitted="true">
-        <domain>172.20.10.150</domain>
+        <domain includeSubdomains="false">172.20.10.150</domain>
     </domain-config>
 </network-security-config>

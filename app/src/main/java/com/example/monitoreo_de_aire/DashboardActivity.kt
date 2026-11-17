@@ -17,6 +17,7 @@ import com.example.monitoreo_de_aire.databinding.ActivityDashboardBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
@@ -24,8 +25,6 @@ import com.google.firebase.database.ValueEventListener
 class DashboardActivity : AppCompatActivity() {
 
     companion object {
-        // Valor crudo del MQ-135 desde el cual la calidad del aire se considera baja.
-        // Debe calibrarse con el sensor real (medir con aire limpio y con aire contaminado).
         private const val UMBRAL_CALIDAD_BAJA = 400
     }
 
@@ -35,12 +34,13 @@ class DashboardActivity : AppCompatActivity() {
     private var devicesQuery: Query? = null
     private var devicesListener: ValueEventListener? = null
 
-    // Vigilancia de la conexión a Internet (usa ACCESS_NETWORK_STATE)
     private lateinit var estadoRed: EstadoRed
     private lateinit var avisoConexion: AvisoConexion
 
-    // Últimos datos recibidos: se vuelven a dibujar al volver de elegir otro dispositivo
     private var ultimoSnapshot: DataSnapshot? = null
+    private var dispositivoRef: DatabaseReference? = null
+    private var enPrimerPlano = false
+    private var notificadoAutoDashboard = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,17 +60,17 @@ class DashboardActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        // Aviso cuando se pierde o vuelve la conexión
         avisoConexion = AvisoConexion(binding.dashboard)
-        estadoRed = EstadoRed(this) { tipo -> avisoConexion.mostrar(tipo) }
+        estadoRed = EstadoRed(this) { tipo ->
+            SincronizadorEsp.hayRed = tipo != EstadoRed.TipoRed.SIN_RED
+            avisoConexion.mostrar(tipo)
+        }
 
-        // Verificamos el inicio de sesión
         val usuarioActual = auth.currentUser
 
         if (usuarioActual != null) {
             cargarNombreUsuario(usuarioActual.uid)
 
-            // Todos los dispositivos del usuario; se muestra el que esté seleccionado
             val consulta = database.reference
                 .child("Dispositivos")
                 .orderByChild("owner_uid")
@@ -102,7 +102,6 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun configurarMenuLateral() {
         val drawer = binding.drawerLayout
-        // Al volver de Dispositivos / Ventilación con la flecha, se reabre el menú
         val menuLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) drawer.openDrawer(GravityCompat.START)
         }
@@ -120,8 +119,6 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    // Atajos desde el Dashboard: el nombre del dispositivo abre la lista de dispositivos
-    // y la tarjeta "Sistema de Ventilación" abre el control del extractor
     private fun configurarAccesosRapidos() {
         binding.nombreSensor.setOnClickListener {
             startActivity(Intent(this, DispositivosActivity::class.java))
@@ -131,21 +128,18 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    // En la cabecera azul del menú se muestra el nombre que el usuario eligió al registrarse
     private fun cargarNombreUsuario(uid: String) {
         val tvNombre = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tvNombreUsuario)
         database.reference.child("Usuarios").child(uid).get()
             .addOnSuccessListener { datos ->
-                // Las cuentas antiguas guardaron el nombre en "usuario"
                 val nombre = datos.child("nombre").getValue(String::class.java)
                     ?: datos.child("usuario").getValue(String::class.java)
                 if (!nombre.isNullOrBlank()) tvNombre.text = nombre
             }
-        // Si falla (sin Internet), queda el texto por defecto del encabezado
     }
 
     private fun cerrarSesion() {
-        // Primero soltamos el listener: sin sesión Firebase lo cancelaría con 'permission denied'
+        SincronizadorEsp.detener(this)
         devicesListener?.let { devicesQuery?.removeEventListener(it) }
         devicesListener = null
         FirebaseAuth.getInstance().signOut()
@@ -157,28 +151,55 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        enPrimerPlano = true
         estadoRed.iniciar()
+        SincronizadorEsp.onDatosNuevos = { datos ->
+            if (datos.encendido && datos.automatico) {
+                binding.extractor.text = "Encendido (Umbral ≥ ${datos.umbral})"
+                binding.extractor.setTextColor(color(R.color.verde_encendido))
+                if (!notificadoAutoDashboard) {
+                    notificadoAutoDashboard = true
+                    Toast.makeText(
+                        this,
+                        "Ventilación activada automáticamente: MQ-135 (${datos.mq135}) superó el umbral de ${datos.umbral}.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else if (!datos.encendido && notificadoAutoDashboard) {
+                notificadoAutoDashboard = false
+                binding.extractor.setText(R.string.estado_apagado)
+                binding.extractor.setTextColor(color(R.color.rojo_apagado))
+                Toast.makeText(
+                    this,
+                    "Calidad de aire normalizada (< ${datos.umbral}): ventilación apagada.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        dispositivoRef?.let { SincronizadorEsp.iniciar(this, this, it) }
     }
 
     override fun onStop() {
         super.onStop()
+        enPrimerPlano = false
+        SincronizadorEsp.detener(this)
         estadoRed.detener()
     }
 
     override fun onResume() {
         super.onResume()
-        // Si en Dispositivos se eligió otro, se actualiza la pantalla
         ultimoSnapshot?.let { mostrar(it) }
     }
 
     private fun color(@ColorRes id: Int) = ContextCompat.getColor(this, id)
 
-    // Dibuja los datos del dispositivo seleccionado
     private fun mostrar(snapshot: DataSnapshot) {
         val uid = auth.currentUser?.uid ?: return
         val sensor = DispositivoActivo.elegir(this, uid, snapshot)
 
         if (sensor == null) {
+            dispositivoRef = null
+            SincronizadorEsp.detener(this)
             binding.nombreSensor.setText(R.string.dashboard_sin_sensores)
             binding.estadoAire.setText(R.string.valor_vacio)
             binding.sensorVal.setText(R.string.dashboard_esperando)
@@ -186,48 +207,48 @@ class DashboardActivity : AppCompatActivity() {
             return
         }
 
+        dispositivoRef = sensor.ref
+        if (enPrimerPlano) {
+            SincronizadorEsp.iniciar(this, this, sensor.ref)
+        }
+
         val cleanName = sensor.child("nombre").getValue(String::class.java)
             ?: sensor.key ?: "Sensor Desconocido"
         binding.nombreSensor.text = getString(R.string.dashboard_nombre_sensor, cleanName)
 
-
         val conectado = sensor.child("estadoConexion").value as? Boolean ?: false
-
-        val ultimaLectura = (
-                sensor.child("ultimaLectura").value as? Number
-                )?.toLong() ?: 0L
-
-        val estadoConexion = conectado &&
-                (System.currentTimeMillis() - ultimaLectura in 0L..45_000L)
+        val ultimaLectura = (sensor.child("ultimaLectura").value as? Number)?.toLong() ?: 0L
+        val estadoConexion = conectado && (System.currentTimeMillis() - ultimaLectura in 0L..45_000L)
 
         val extractorEncendido = sensor.child("extractor").child("encendido").value as? Boolean ?: false
+        val extractorAuto = sensor.child("extractor").child("automatico").value as? Boolean ?: false
         val valorMq135 = (sensor.child("mq135_valor").value as? Number)?.toInt() ?: 0
 
-        // Calidad del aire: Alta o Baja según el umbral
         val fondoEtiqueta = binding.calidadAireLb.background as? GradientDrawable
 
         if (valorMq135 < UMBRAL_CALIDAD_BAJA) {
-            // Aire limpio - Calidad Alta
             binding.estadoAire.setText(R.string.calidad_alta)
             binding.calidadAire.setCardBackgroundColor(color(R.color.azul_claro))
             binding.estadoAire.setTextColor(color(R.color.blanco_translucido))
             fondoEtiqueta?.setColor(color(R.color.azul_etiqueta_alta))
         } else {
-            // Aire pesado - Calidad baja
             binding.estadoAire.setText(R.string.calidad_baja)
             binding.calidadAire.setCardBackgroundColor(color(R.color.rojo_baja))
             binding.estadoAire.setTextColor(color(R.color.negro_translucido))
             fondoEtiqueta?.setColor(color(R.color.rojo_etiqueta_baja))
         }
 
-        // Valor del sensor, con 🟢 / 🔴 según esté conectado el dispositivo
         binding.sensorVal.text = getString(
             if (estadoConexion) R.string.dashboard_valor_conectado else R.string.dashboard_valor_desconectado,
             valorMq135
         )
 
         if (extractorEncendido) {
-            binding.extractor.setText(R.string.estado_encendido)
+            if (extractorAuto) {
+                binding.extractor.text = "Encendido (Umbral ≥ $UMBRAL_CALIDAD_BAJA)"
+            } else {
+                binding.extractor.setText(R.string.estado_encendido)
+            }
             binding.extractor.setTextColor(color(R.color.verde_encendido))
         } else {
             binding.extractor.setText(R.string.estado_apagado)
@@ -237,6 +258,7 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        SincronizadorEsp.detener(this)
         devicesListener?.let { devicesQuery?.removeEventListener(it) }
     }
 }

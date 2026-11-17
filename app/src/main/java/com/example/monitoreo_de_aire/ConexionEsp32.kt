@@ -4,38 +4,25 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
-/**
- * Cliente HTTP del ESP32 en la red local (arquitectura ESP32 -> App -> Firebase):
- * la app consulta el estado (GET /datos), descarga el buffer de lecturas que el
- * ESP32 guardó offline en su flash (GET /buffer), envía la orden del servo con
- * sus minutos (POST /servo) y confirma la recepción para que el ESP32 borre lo
- * ya entregado (POST /sync_ack). DESPUÉS es la app la que sube todo a Firebase
- * Realtime Database; el ESP32 nunca se conecta a la nube.
- *
- * Seguridad: cada petición lleva el encabezado X-Device-Token, que debe ser
- * idéntico a DEVICE_TOKEN en config.h del firmware. HTTP está limitado por
- * network_security_config.xml a la IP del ESP32; todo lo demás es HTTPS.
- * Todas las operaciones son bloqueantes: llamarlas desde un hilo de fondo.
- */
 object ConexionEsp32 {
 
     data class DatosEsp32(
         val mq135: Int,
         val encendido: Boolean,
+        val automatico: Boolean,
+        val motivo: String,
+        val umbral: Int,
         val minutos: Int,
         val restanteSeg: Long,
         val servo: String
     )
 
     data class LecturaOffline(
-        val ms: Long,   // millis() del ESP32 al capturar (solo para conservar el orden)
-        val valor: Int  // lectura cruda del MQ-135
+        val ms: Long,
+        val valor: Int
     )
 
-    // ======== AJUSTAR: misma IP que imprime el Monitor Serial del ESP32 ========
-    // (o la de ESP32_IP_FIJA en config.h si USAR_IP_FIJA es true)
     private const val IP = "172.20.10.150"
-    // Mismo token que DEVICE_TOKEN en config.h del firmware
     private const val TOKEN = "monitoreo-aire-2026"
 
     private fun conectar(ruta: String, metodo: String, cuerpo: String? = null): Pair<Int, String> {
@@ -56,7 +43,7 @@ object ConexionEsp32 {
         return codigo to texto
     }
 
-    /** Lee el estado del ESP32, o null si no respondió / token inválido. */
+    /** Lee el estado del ESP32 incluyendo si se activó automáticamente y el motivo. */
     fun obtenerDatos(): DatosEsp32? = try {
         val (codigo, texto) = conectar("/datos", "GET")
         if (codigo == 200) {
@@ -64,6 +51,9 @@ object ConexionEsp32 {
             DatosEsp32(
                 mq135 = json.getInt("mq135"),
                 encendido = json.getBoolean("encendido"),
+                automatico = json.optBoolean("automatico", false),
+                motivo = json.optString("motivo", "APAGADO"),
+                umbral = json.optInt("umbral", 400),
                 minutos = json.getInt("minutos"),
                 restanteSeg = json.getLong("restante_s"),
                 servo = json.getString("servo")
