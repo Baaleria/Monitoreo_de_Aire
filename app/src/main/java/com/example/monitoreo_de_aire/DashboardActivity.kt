@@ -58,6 +58,11 @@ class DashboardActivity : AppCompatActivity() {
         configurarAccesosRapidos()
 
         auth = FirebaseAuth.getInstance()
+        try {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        } catch (_: Exception) {
+            // Ya estaba habilitada en esta instancia de la app
+        }
         database = FirebaseDatabase.getInstance()
 
         avisoConexion = AvisoConexion(binding.dashboard)

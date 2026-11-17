@@ -311,12 +311,13 @@ class VentilacionActivity : AppCompatActivity() {
             runOnUiThread {
                 binding.btnAplicar.isEnabled = true
                 if (llego) {
-                    estabaEnAutomatico = false
-                    binding.tvAviso.visibility = View.GONE
-                    Toast.makeText(this, R.string.msg_cambios_aplicados, Toast.LENGTH_SHORT).show()
-                    actualizarTextoEstado(encendido, false)
-                    actualizarDuracionHabilitada(encendido)
-                } else {
+                    val orden = mapOf<String, Any>(
+                        "encendido" to encendido,
+                        "automatico" to false,
+                        "duracion_minutos" to minutos
+                    )
+                    ref.child("extractor").updateChildren(orden)
+                }else {
                     Toast.makeText(
                         this,
                         "No se pudo conectar con el ESP32 en la red local",
