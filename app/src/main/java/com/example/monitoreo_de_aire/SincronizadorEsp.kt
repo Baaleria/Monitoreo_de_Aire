@@ -67,7 +67,7 @@ object SincronizadorEsp {
                         )
                     }
                 }
-                if (activo) hilo.postDelayed(this, 5000L)
+                if (activo) hilo.postDelayed(this, 1500L)
             }.start()
         }
     }

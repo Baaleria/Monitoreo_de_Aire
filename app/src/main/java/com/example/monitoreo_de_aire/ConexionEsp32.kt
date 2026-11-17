@@ -22,7 +22,7 @@ object ConexionEsp32 {
         val valor: Int
     )
 
-    private const val IP = "172.20.10.150"
+    private const val IP = "172.20.10.2"
     private const val TOKEN = "monitoreo-aire-2026"
 
     private fun conectar(ruta: String, metodo: String, cuerpo: String? = null): Pair<Int, String> {

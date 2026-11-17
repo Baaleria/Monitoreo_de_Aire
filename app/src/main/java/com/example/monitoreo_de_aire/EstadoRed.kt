@@ -80,12 +80,12 @@ class AvisoConexion(private val vista: View) {
 
     fun mostrar(tipo: EstadoRed.TipoRed) {
         if (tipo == EstadoRed.TipoRed.SIN_RED) {
-            estabaSinRed = true
-            if (avisoSinRed?.isShown != true) {
+            if (!estabaSinRed) {
+                estabaSinRed = true
                 avisoSinRed = Snackbar.make(
                     vista,
                     "📡 Sin conexión a Internet. Los datos pueden estar desactualizados.",
-                    Snackbar.LENGTH_INDEFINITE
+                    Snackbar.LENGTH_LONG
                 ).also { it.show() }
             }
         } else {
@@ -93,11 +93,14 @@ class AvisoConexion(private val vista: View) {
             avisoSinRed = null
             if (estabaSinRed) {
                 estabaSinRed = false
-                Snackbar.make(vista, "✅ Conexión restablecida (${nombre(tipo)})", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    vista,
+                    "✅ Conexión restablecida (${nombre(tipo)})",
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
     }
-
     private fun nombre(tipo: EstadoRed.TipoRed): String = when (tipo) {
         EstadoRed.TipoRed.WIFI -> "Wi-Fi"
         EstadoRed.TipoRed.DATOS_MOVILES -> "datos móviles"
